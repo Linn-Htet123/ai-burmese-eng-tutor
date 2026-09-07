@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[PRODUCT NAME TBD] — Voice Pipeline & Cost Architecture</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace; background: #020617; min-height: 100vh; padding: 2rem; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container { background: rgba(15, 23, 42, 0.5); border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; overflow-x: auto; }
+    svg { width: 100%; min-width: 900px; display: block; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .card { background: rgba(15, 23, 42, 0.5); border-radius: 0.75rem; border: 1px solid #1e293b; padding: 1.25rem; }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; } .card-dot.emerald { background: #34d399; } .card-dot.violet { background: #a78bfa; } .card-dot.amber { background: #fbbf24; } .card-dot.rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+    .toolbar { display: flex; gap: 0.5rem; margin-left: auto; flex-shrink: 0; align-items: center; }
+    .toolbar-toggle { background: transparent; border: none; color: #475569; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0.25rem 0.5rem; border-radius: 0.375rem; transition: color 0.2s, background 0.2s; }
+    .toolbar-toggle:hover { color: #94a3b8; background: rgba(30, 41, 59, 0.5); }
+    .toolbar-actions { display: none; gap: 0.5rem; }
+    .toolbar.expanded .toolbar-actions { display: flex; }
+    .toolbar-actions button { background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #94a3b8; padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-family: inherit; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .toolbar-actions button:hover { background: rgba(51, 65, 85, 0.8); color: white; border-color: #475569; }
+    @media print { body { background: #020617; padding: 1rem; } .toolbar { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="container" id="report-container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Voice Pipeline &amp; Cost Architecture</h1>
+        <div class="toolbar">
+          <div class="toolbar-actions">
+            <button onclick="copyAsImage(this)">📋 Copy</button>
+            <button onclick="downloadPNG(this)">🖼️ PNG</button>
+            <button onclick="downloadPDF(this)">📄 PDF</button>
+          </div>
+          <button class="toolbar-toggle" onclick="this.parentElement.classList.toggle('expanded')" title="Export options" aria-label="Export options">⋯</button>
+        </div>
+      </div>
+      <p class="subtitle">The R-TE-1 (&lt;1s latency) and D-011 (item log from model) architecture · target = Row F, $2.61 per course</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 780">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrowhead-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24" />
+          </marker>
+          <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a78bfa" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Region: target architecture (Row F) -->
+        <rect x="30" y="60" width="940" height="440" rx="12" fill="rgba(6,78,59,0.05)" stroke="#34d399" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="45" y="80" fill="#34d399" font-size="10" font-weight="600">TARGET · Row F architecture — $2.61 per 12-session course</text>
+
+        <!-- =========================================================
+             ARROWS (drawn early to sit behind boxes)
+             ========================================================= -->
+
+        <!-- Client → LLM audio in -->
+        <line x1="225" y1="200" x2="385" y2="200" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="305" y="190" fill="#22d3ee" font-size="10" font-weight="600" text-anchor="middle">① audio in (VAD)</text>
+        <text x="305" y="216" fill="#94a3b8" font-size="8" text-anchor="middle">$0.0045/min</text>
+
+        <!-- LLM audio out → Client -->
+        <line x1="385" y1="260" x2="225" y2="260" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="305" y="252" fill="#34d399" font-size="10" font-weight="600" text-anchor="middle">② audio out</text>
+        <text x="305" y="276" fill="#94a3b8" font-size="8" text-anchor="middle">$0.018/min · &lt; 1s (R-TE-1)</text>
+
+        <!-- LLM → TTS cache (for scripted parts) -->
+        <line x1="600" y1="290" x2="600" y2="345" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arrowhead)"/>
+        <text x="610" y="320" fill="#38bdf8" font-size="8">scripted → cache hit</text>
+
+        <!-- TTS cache → Client (audio out) -->
+        <path d="M 480 385 Q 250 385 130 260" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arrowhead)"/>
+        <text x="270" y="380" fill="#38bdf8" font-size="8">pre-generated audio · $0.009/min</text>
+
+        <!-- LLM → item log → DB -->
+        <line x1="720" y1="200" x2="765" y2="200" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowhead-amber)"/>
+        <text x="742" y="188" fill="#fbbf24" font-size="10" font-weight="600" text-anchor="middle">③ item log</text>
+
+        <!-- LLM audio → recording store -->
+        <path d="M 720 260 Q 800 260 830 320" fill="none" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead-purple)"/>
+        <text x="820" y="270" fill="#a78bfa" font-size="8">session audio</text>
+
+        <!-- Review queue → analytics -->
+        <line x1="870" y1="220" x2="870" y2="315" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+
+        <!-- =========================================================
+             CLIENT BOX (frontend)
+             ========================================================= -->
+        <rect x="45" y="150" width="180" height="140" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="135" y="172" fill="white" font-size="12" font-weight="600" text-anchor="middle">Client — Mobile Browser</text>
+        <text x="135" y="190" fill="#94a3b8" font-size="9" text-anchor="middle">Chrome/Android · Safari/iOS</text>
+        <text x="135" y="204" fill="#94a3b8" font-size="9" text-anchor="middle">R-PL-5 · mid-range phone</text>
+        <text x="135" y="222" fill="#22d3ee" font-size="9" text-anchor="middle" font-weight="600">Client-side VAD</text>
+        <text x="135" y="236" fill="#94a3b8" font-size="8" text-anchor="middle">R-TE-3 · silence never sent</text>
+        <text x="135" y="256" fill="#fbbf24" font-size="9" text-anchor="middle" font-weight="600">Interrupt in 300ms</text>
+        <text x="135" y="270" fill="#94a3b8" font-size="8" text-anchor="middle">R-TE-2 · learner speech stops May</text>
+
+        <!-- =========================================================
+             LLM BOX (the big one, backend)
+             ========================================================= -->
+        <rect x="385" y="150" width="335" height="150" rx="6" fill="rgba(6,78,59,0.5)" stroke="#34d399" stroke-width="2"/>
+        <text x="552" y="172" fill="white" font-size="13" font-weight="700" text-anchor="middle">LLM — Gemini 3.1 Flash Live</text>
+        <text x="552" y="192" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">Per-stage context (R-SE-3 · R-TE-4)</text>
+        <text x="552" y="212" fill="#94a3b8" font-size="9" text-anchor="middle">25 audio tokens/sec · streaming</text>
+
+        <!-- Two output paths shown inside LLM -->
+        <line x1="410" y1="228" x2="694" y2="228" stroke="#334155" stroke-width="0.5"/>
+        <text x="450" y="248" fill="#34d399" font-size="9" font-weight="600">audio out ⇒ client</text>
+        <text x="660" y="248" fill="#fbbf24" font-size="9" font-weight="600" text-anchor="end">item log ⇒ DB</text>
+        <text x="450" y="264" fill="#94a3b8" font-size="8">natural conversation</text>
+        <text x="660" y="264" fill="#94a3b8" font-size="8" text-anchor="end">D-011 · R-TE-7</text>
+        <text x="450" y="278" fill="#94a3b8" font-size="8">May's persona</text>
+        <text x="660" y="278" fill="#94a3b8" font-size="8" text-anchor="end">structured JSON</text>
+        <text x="552" y="294" fill="#fb7185" font-size="8" text-anchor="middle">⚠️ PROTOTYPE IN WEEK 1 · reliability of item log is the whole D-011 saving</text>
+
+        <!-- =========================================================
+             TTS CACHE
+             ========================================================= -->
+        <rect x="480" y="345" width="240" height="60" rx="6" fill="rgba(8,51,68,0.4)" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="600" y="368" fill="white" font-size="12" font-weight="600" text-anchor="middle">TTS Cache — Scripted Lines</text>
+        <text x="600" y="386" fill="#94a3b8" font-size="9" text-anchor="middle">Flash TTS $0.009/min · shared across learners</text>
+        <text x="600" y="398" fill="#94a3b8" font-size="8" text-anchor="middle">Greetings, situation briefs, stage transitions</text>
+
+        <!-- =========================================================
+             DATA STORES (right side)
+             ========================================================= -->
+        <!-- Review queue / item log -->
+        <rect x="765" y="150" width="200" height="80" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="865" y="172" fill="white" font-size="12" font-weight="600" text-anchor="middle">Spaced Review Queue</text>
+        <text x="865" y="190" fill="#94a3b8" font-size="9" text-anchor="middle">Item log rows</text>
+        <text x="865" y="204" fill="#94a3b8" font-size="9" text-anchor="middle">R-RV-1 · R-RV-3</text>
+        <text x="865" y="220" fill="#a78bfa" font-size="8" text-anchor="middle">1d · 3d · 1wk · 3wk · longer</text>
+
+        <!-- Session recording -->
+        <rect x="765" y="315" width="200" height="60" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="865" y="337" fill="white" font-size="12" font-weight="600" text-anchor="middle">Recording Store</text>
+        <text x="865" y="355" fill="#94a3b8" font-size="9" text-anchor="middle">R-SE-9 · R-TE-10</text>
+        <text x="865" y="367" fill="#94a3b8" font-size="8" text-anchor="middle">learner-only access</text>
+
+        <!-- Analytics -->
+        <rect x="765" y="410" width="200" height="60" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="865" y="432" fill="white" font-size="12" font-weight="600" text-anchor="middle">Analytics Events</text>
+        <text x="865" y="450" fill="#94a3b8" font-size="9" text-anchor="middle">Section 15.1</text>
+        <text x="865" y="462" fill="#94a3b8" font-size="8" text-anchor="middle">session-number granularity</text>
+
+        <!-- =========================================================
+             COST TABLE (bottom)
+             ========================================================= -->
+        <rect x="30" y="530" width="940" height="220" rx="8" fill="rgba(15,23,42,0.6)" stroke="#334155" stroke-width="1"/>
+        <text x="500" y="552" fill="white" font-size="12" font-weight="600" text-anchor="middle">Per-Course Cost by Architecture — BRD Section 3.2</text>
+
+        <!-- Table headers -->
+        <text x="60" y="580" fill="#94a3b8" font-size="9" font-weight="600">Row</text>
+        <text x="130" y="580" fill="#94a3b8" font-size="9" font-weight="600">Architecture</text>
+        <text x="700" y="580" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="end">Per session</text>
+        <text x="850" y="580" fill="#94a3b8" font-size="9" font-weight="600" text-anchor="end">Per course (12)</text>
+        <line x1="55" y1="588" x2="945" y2="588" stroke="#334155" stroke-width="0.5"/>
+
+        <text x="60" y="606" fill="white" font-size="9" font-weight="600">A</text>
+        <text x="130" y="606" fill="#94a3b8" font-size="9">All live, no VAD, 1.5× context overhead</text>
+        <text x="700" y="606" fill="#94a3b8" font-size="9" text-anchor="end">$0.74</text>
+        <text x="850" y="606" fill="#fb7185" font-size="9" text-anchor="end">$8.91</text>
+
+        <text x="60" y="624" fill="white" font-size="9" font-weight="600">B</text>
+        <text x="130" y="624" fill="#94a3b8" font-size="9">All live + client VAD, 1.3× overhead</text>
+        <text x="700" y="624" fill="#94a3b8" font-size="9" text-anchor="end">$0.49</text>
+        <text x="850" y="624" fill="#94a3b8" font-size="9" text-anchor="end">$5.91</text>
+
+        <text x="60" y="642" fill="white" font-size="9" font-weight="600">C</text>
+        <text x="130" y="642" fill="#94a3b8" font-size="9">Hybrid, 30% scripted TTS, segmented context 1.1×</text>
+        <text x="700" y="642" fill="#94a3b8" font-size="9" text-anchor="end">$0.44</text>
+        <text x="850" y="642" fill="#94a3b8" font-size="9" text-anchor="end">$5.26</text>
+
+        <text x="60" y="660" fill="white" font-size="9" font-weight="600">D</text>
+        <text x="130" y="660" fill="#94a3b8" font-size="9">C + scripted TTS cached across learners</text>
+        <text x="700" y="660" fill="#94a3b8" font-size="9" text-anchor="end">$0.40</text>
+        <text x="850" y="660" fill="#94a3b8" font-size="9" text-anchor="end">$4.78</text>
+
+        <text x="60" y="678" fill="white" font-size="9" font-weight="600">E</text>
+        <text x="130" y="678" fill="#94a3b8" font-size="9">D, with learner talking 70% of the time (no D-011 yet)</text>
+        <text x="700" y="678" fill="#94a3b8" font-size="9" text-anchor="end">$0.41</text>
+        <text x="850" y="678" fill="#94a3b8" font-size="9" text-anchor="end">$4.88</text>
+
+        <line x1="55" y1="688" x2="945" y2="688" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <text x="60" y="708" fill="#fbbf24" font-size="10" font-weight="700">F ★</text>
+        <text x="130" y="708" fill="white" font-size="10" font-weight="600">E + item log emitted by model (D-011) — TARGET</text>
+        <text x="700" y="708" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="end">$0.22</text>
+        <text x="850" y="708" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="end">$2.61</text>
+
+        <text x="500" y="734" fill="#fb7185" font-size="9" text-anchor="middle">D-011 saves ~45% of session cost by removing the separate transcription stream.</text>
+      </svg>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot rose"></div>
+          <h3>The R-TE-1 latency budget</h3>
+        </div>
+        <ul>
+          <li>• Sub-1s from end of learner speech to May's voice</li>
+          <li>• Retrieval practice under time pressure is the method</li>
+          <li>• Interrupt May within 300ms of new speech (R-TE-2)</li>
+          <li>• Per-stage context reset avoids 30-min accumulated audio re-bills</li>
+          <li>• Reconnect must NOT resend prior audio (R-TE-5)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot amber"></div>
+          <h3>D-011 · The item-log lever</h3>
+        </div>
+        <ul>
+          <li>• Live model emits structured JSON alongside audio</li>
+          <li>• Removes the separate transcription stream</li>
+          <li>• Roughly 45% of optimised session cost</li>
+          <li>• Takes course from $4.78 (Row D) → $2.61 (Row F)</li>
+          <li>• PROTOTYPE IN WEEK 1 · reliability is the whole bet</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot violet"></div>
+          <h3>What must be persisted</h3>
+        </div>
+        <ul>
+          <li>• Item log rows (spaced review queue)</li>
+          <li>• Session audio (learner-only ACL, R-TE-10)</li>
+          <li>• Fluency metrics per session (R-PR-5)</li>
+          <li>• Analytics events, session-number granular</li>
+          <li>• Billed tokens per session per stage from day one (R-TE-8)</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer">
+      [PRODUCT NAME TBD] · Diagram 03 of N · traces PRD Section 15 + BRD Section 3
+    </p>
+  </div>
+
+  <script>
+    async function copyAsImage(btn) { const orig = btn.textContent; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const blob = await new Promise(r => canvas.toBlob(r, 'image/png')); await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); btn.textContent = '✓ Copied!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+    async function downloadPNG(btn) { const orig = btn.textContent; btn.textContent = '⏳ ...'; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const link = document.createElement('a'); link.download = 'voice-pipeline.png'; link.href = canvas.toDataURL('image/png'); link.click(); btn.textContent = '✓ Done!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+    async function downloadPDF(btn) { const orig = btn.textContent; btn.textContent = '⏳ ...'; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const orientation = canvas.width > canvas.height ? 'landscape' : 'portrait'; const pdf = new jsPDF({ orientation, unit: 'px', format: [canvas.width, canvas.height], hotfixes: ['px_scaling'] }); pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height); pdf.save('voice-pipeline.pdf'); btn.textContent = '✓ Done!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+  </script>
+</body>
+</html>

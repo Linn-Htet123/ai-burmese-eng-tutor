@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[PRODUCT NAME TBD] — Upgrade Loop State Machine</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace; background: #020617; min-height: 100vh; padding: 2rem; color: white; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container { background: rgba(15, 23, 42, 0.5); border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; overflow-x: auto; }
+    svg { width: 100%; min-width: 900px; display: block; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .card { background: rgba(15, 23, 42, 0.5); border-radius: 0.75rem; border: 1px solid #1e293b; padding: 1.25rem; }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; } .card-dot.emerald { background: #34d399; } .card-dot.violet { background: #a78bfa; } .card-dot.amber { background: #fbbf24; } .card-dot.rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+    .toolbar { display: flex; gap: 0.5rem; margin-left: auto; flex-shrink: 0; align-items: center; }
+    .toolbar-toggle { background: transparent; border: none; color: #475569; cursor: pointer; font-size: 1.25rem; line-height: 1; padding: 0.25rem 0.5rem; border-radius: 0.375rem; transition: color 0.2s, background 0.2s; }
+    .toolbar-toggle:hover { color: #94a3b8; background: rgba(30, 41, 59, 0.5); }
+    .toolbar-actions { display: none; gap: 0.5rem; }
+    .toolbar.expanded .toolbar-actions { display: flex; }
+    .toolbar-actions button { background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; color: #94a3b8; padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-family: inherit; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .toolbar-actions button:hover { background: rgba(51, 65, 85, 0.8); color: white; border-color: #475569; }
+    @media print { body { background: #020617; padding: 1rem; } .toolbar { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="container" id="report-container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Upgrade Loop — State Machine</h1>
+        <div class="toolbar">
+          <div class="toolbar-actions">
+            <button onclick="copyAsImage(this)">📋 Copy</button>
+            <button onclick="downloadPNG(this)">🖼️ PNG</button>
+            <button onclick="downloadPDF(this)">📄 PDF</button>
+          </div>
+          <button class="toolbar-toggle" onclick="this.parentElement.classList.toggle('expanded')" title="Export options" aria-label="Export options">⋯</button>
+        </div>
+      </div>
+      <p class="subtitle">PRD Section 7 · The core mechanic. Runs identically every time. Cyan = learner speaks, green = May speaks, violet = write.</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 780">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a78bfa" />
+          </marker>
+          <marker id="arrowhead-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Speaker labels -->
+        <text x="30" y="180" fill="#34d399" font-size="10" font-weight="600" letter-spacing="0.1em">MAY</text>
+        <text x="30" y="270" fill="#22d3ee" font-size="10" font-weight="600" letter-spacing="0.1em">LEARNER</text>
+        <text x="30" y="470" fill="#a78bfa" font-size="10" font-weight="600" letter-spacing="0.1em">SYSTEM</text>
+
+        <!-- Speaker lane separators (subtle) -->
+        <line x1="70" y1="220" x2="990" y2="220" stroke="#1e293b" stroke-width="0.5" stroke-dasharray="2,4"/>
+        <line x1="70" y1="320" x2="990" y2="320" stroke="#1e293b" stroke-width="0.5" stroke-dasharray="2,4"/>
+
+        <!-- =========================================================
+             CONNECTING ARROWS (drawn early, sit behind boxes)
+             ========================================================= -->
+        <!-- S1 → S2 -->
+        <line x1="200" y1="230" x2="230" y2="260" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <!-- S2 → S3 -->
+        <line x1="360" y1="260" x2="390" y2="230" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <!-- S3 → S4 -->
+        <line x1="530" y1="190" x2="560" y2="190" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <!-- S4 → S5 -->
+        <line x1="700" y1="230" x2="730" y2="260" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <!-- S5 → S6 -->
+        <line x1="860" y1="260" x2="890" y2="230" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <!-- S6 → S7 (down and around to LOG box) -->
+        <path d="M 940 230 Q 940 400 640 460" fill="none" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead-purple)"/>
+        <text x="895" y="360" fill="#a78bfa" font-size="9">confirm</text>
+
+        <!-- S6 → S5 (hesitant, dashed loop back) -->
+        <path d="M 890 170 Q 810 130 750 170" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowhead-amber)"/>
+        <text x="775" y="128" fill="#fbbf24" font-size="9" text-anchor="middle">hesitant → one more run</text>
+
+        <!-- S5 → S6 skipped case (R-UL-5): dashed continue arrow above S5 -->
+        <path d="M 795 245 Q 795 100 940 155" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
+        <text x="820" y="95" fill="#fb7185" font-size="9">learner skips → prompt once → continue (R-UL-5)</text>
+
+        <!-- S7 → next-turn S1 loop-back -->
+        <path d="M 470 495 Q 130 550 130 250 Q 130 190 138 190" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowhead-purple)"/>
+        <text x="130" y="600" fill="#a78bfa" font-size="9" text-anchor="middle">next turn</text>
+        <text x="130" y="612" fill="#a78bfa" font-size="9" text-anchor="middle">in same session</text>
+
+        <!-- =========================================================
+             STATE BOXES — MAY lane (top)
+             ========================================================= -->
+        <!-- S1 PROMPT -->
+        <rect x="90" y="150" width="140" height="80" rx="6" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="160" y="170" fill="#34d399" font-size="9" font-weight="600" text-anchor="middle">S1</text>
+        <text x="160" y="188" fill="white" font-size="12" font-weight="600" text-anchor="middle">PROMPT</text>
+        <text x="160" y="206" fill="#94a3b8" font-size="8" text-anchor="middle">May asks a question</text>
+        <text x="160" y="220" fill="#94a3b8" font-size="8" text-anchor="middle">or sets a situation</text>
+
+        <!-- S3 ACKNOWLEDGE -->
+        <rect x="390" y="150" width="140" height="80" rx="6" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="460" y="170" fill="#34d399" font-size="9" font-weight="600" text-anchor="middle">S3</text>
+        <text x="460" y="188" fill="white" font-size="12" font-weight="600" text-anchor="middle">ACKNOWLEDGE</text>
+        <text x="460" y="206" fill="#94a3b8" font-size="8" text-anchor="middle">Name what worked,</text>
+        <text x="460" y="220" fill="#94a3b8" font-size="8" text-anchor="middle">specifically. R-UL-2</text>
+
+        <!-- S4 UPGRADE -->
+        <rect x="560" y="150" width="140" height="80" rx="6" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="630" y="170" fill="#34d399" font-size="9" font-weight="600" text-anchor="middle">S4</text>
+        <text x="630" y="188" fill="white" font-size="12" font-weight="600" text-anchor="middle">UPGRADE</text>
+        <text x="630" y="206" fill="#fbbf24" font-size="8" text-anchor="middle">ONE better version.</text>
+        <text x="630" y="220" fill="#94a3b8" font-size="8" text-anchor="middle">R-UL-3 · from pool R-UL-8</text>
+
+        <!-- S6 CONFIRM -->
+        <rect x="890" y="150" width="100" height="80" rx="6" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="940" y="170" fill="#34d399" font-size="9" font-weight="600" text-anchor="middle">S6</text>
+        <text x="940" y="188" fill="white" font-size="12" font-weight="600" text-anchor="middle">CONFIRM</text>
+        <text x="940" y="206" fill="#94a3b8" font-size="8" text-anchor="middle">or ask for</text>
+        <text x="940" y="220" fill="#94a3b8" font-size="8" text-anchor="middle">one more run</text>
+
+        <!-- =========================================================
+             STATE BOXES — LEARNER lane (middle)
+             ========================================================= -->
+        <!-- S2 LEARNER -->
+        <rect x="230" y="245" width="130" height="70" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="295" y="265" fill="#22d3ee" font-size="9" font-weight="600" text-anchor="middle">S2</text>
+        <text x="295" y="283" fill="white" font-size="12" font-weight="600" text-anchor="middle">LEARNER</text>
+        <text x="295" y="301" fill="#94a3b8" font-size="8" text-anchor="middle">Answers, however they can</text>
+
+        <!-- S5 REPEAT -->
+        <rect x="730" y="245" width="130" height="70" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="795" y="265" fill="#22d3ee" font-size="9" font-weight="600" text-anchor="middle">S5</text>
+        <text x="795" y="283" fill="white" font-size="12" font-weight="600" text-anchor="middle">REPEAT</text>
+        <text x="795" y="301" fill="#fb7185" font-size="8" text-anchor="middle">Required (R-UL-5)</text>
+
+        <!-- =========================================================
+             STATE BOXES — SYSTEM lane (bottom)
+             ========================================================= -->
+        <!-- S7 LOG -->
+        <rect x="470" y="440" width="170" height="80" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="555" y="460" fill="#a78bfa" font-size="9" font-weight="600" text-anchor="middle">S7</text>
+        <text x="555" y="478" fill="white" font-size="12" font-weight="600" text-anchor="middle">LOG</text>
+        <text x="555" y="496" fill="#94a3b8" font-size="8" text-anchor="middle">Upgraded phrase written</text>
+        <text x="555" y="510" fill="#94a3b8" font-size="8" text-anchor="middle">to spaced-review queue</text>
+
+        <!-- Authored pool (side) -->
+        <rect x="700" y="430" width="270" height="100" rx="6" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <text x="835" y="450" fill="#fbbf24" font-size="10" font-weight="600" text-anchor="middle">AUTHORED UPGRADE POOL</text>
+        <text x="835" y="468" fill="#94a3b8" font-size="8" text-anchor="middle">Per unit · trigger phrase → upgraded form</text>
+        <text x="835" y="482" fill="#94a3b8" font-size="8" text-anchor="middle">Types: verb choice · collocation · compression</text>
+        <text x="835" y="496" fill="#94a3b8" font-size="8" text-anchor="middle">hedging · turn-holders (Section 7.3 priority order)</text>
+        <text x="835" y="514" fill="#fb7185" font-size="8" text-anchor="middle">If pool misses → generated + flagged for review (R-UL-9)</text>
+
+        <!-- Arrow from pool → S4 (dashed, feeding upgrades) -->
+        <path d="M 835 430 Q 835 380 700 190" fill="none" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4,4" opacity="0.6" marker-end="url(#arrowhead-amber)"/>
+        <text x="880" y="380" fill="#fbbf24" font-size="8" opacity="0.7">pool feeds S4</text>
+
+        <!-- =========================================================
+             REQUIREMENT CALLOUTS
+             ========================================================= -->
+        <!-- R-UL-1 between S2/S3 -->
+        <rect x="240" y="120" width="290" height="18" rx="3" fill="rgba(251,113,133,0.15)" stroke="#fb7185" stroke-width="0.5"/>
+        <text x="385" y="133" fill="#fb7185" font-size="9" font-weight="600" text-anchor="middle">R-UL-1 · every loop passes S3 before S4</text>
+
+        <!-- R-UL-6 above S4 -->
+        <text x="630" y="140" fill="#94a3b8" font-size="8" text-anchor="middle">R-UL-6 · changes phrasing, not content</text>
+
+        <!-- R-UL-4 below S2 -->
+        <text x="295" y="335" fill="#fb7185" font-size="8" text-anchor="middle">R-UL-4 · May never interrupts mid-sentence</text>
+
+        <!-- =========================================================
+             KEY RULES BOX (bottom)
+             ========================================================= -->
+        <rect x="50" y="640" width="920" height="120" rx="8" fill="rgba(15,23,42,0.6)" stroke="#334155" stroke-width="1"/>
+        <text x="510" y="662" fill="white" font-size="11" font-weight="600" text-anchor="middle">KEY RULES — PRD Section 7.2</text>
+
+        <text x="80" y="686" fill="#34d399" font-size="9" font-weight="600">R-UL-1 · Acknowledgement never skipped</text>
+        <text x="80" y="702" fill="#34d399" font-size="9" font-weight="600">R-UL-2 · Specific praise, never "good job"</text>
+        <text x="80" y="718" fill="#34d399" font-size="9" font-weight="600">R-UL-3 · Exactly one upgrade per turn</text>
+        <text x="80" y="734" fill="#34d399" font-size="9" font-weight="600">R-UL-4 · May never interrupts learner</text>
+        <text x="80" y="750" fill="#34d399" font-size="9" font-weight="600">R-UL-5 · S5 required · prompt once if skipped</text>
+
+        <text x="500" y="686" fill="#34d399" font-size="9" font-weight="600">R-UL-6 · Upgrade changes phrasing, not content</text>
+        <text x="500" y="702" fill="#34d399" font-size="9" font-weight="600">R-UL-7 · Wrong sentences fixed in same warm frame</text>
+        <text x="500" y="718" fill="#fbbf24" font-size="9" font-weight="600">R-UL-8 · Upgrades from authored pool (D-014)</text>
+        <text x="500" y="734" fill="#fb7185" font-size="9" font-weight="600">R-UL-9 · Pool-miss upgrades flagged for review</text>
+        <text x="500" y="750" fill="#a78bfa" font-size="9" font-weight="600">Every S7 write is future spaced review (R-RV-1)</text>
+      </svg>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot rose"></div>
+          <h3>Why the say-it-back is the mechanism</h3>
+        </div>
+        <ul>
+          <li>• Hearing a better sentence changes nothing</li>
+          <li>• Saying it out loud lays down the retrieval path</li>
+          <li>• R-UL-5: prompt once if skipped, then continue</li>
+          <li>• Never prompt twice — fighting the learner costs more than the missed rep</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot amber"></div>
+          <h3>The R-UL-8/9 quality firewall</h3>
+        </div>
+        <ul>
+          <li>• Improvised upgrades produce confident nonsense</li>
+          <li>• Authored pool is the safety net</li>
+          <li>• Pool-miss → generated + flagged</li>
+          <li>• Founder reviews flagged upgrades weekly (R-CA-5)</li>
+          <li>• Pool also enables cached TTS for scripted lines</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot emerald"></div>
+          <h3>Upgrade priority (Section 7.3)</h3>
+        </div>
+        <ul>
+          <li>• 1. Verb choice — highest yield ("did" → "ran")</li>
+          <li>• 2. Collocation ("make a decision")</li>
+          <li>• 3. Compression — shorter is often better</li>
+          <li>• 4. Hedging ("roughly", "off the top of my head")</li>
+          <li>• 5. Turn-holding fillers — teach in session 1 at every level</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer">
+      [PRODUCT NAME TBD] · Diagram 02 of N · traces PRD Section 7 (R-UL-1 through R-UL-9)
+    </p>
+  </div>
+
+  <script>
+    async function copyAsImage(btn) { const orig = btn.textContent; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const blob = await new Promise(r => canvas.toBlob(r, 'image/png')); await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); btn.textContent = '✓ Copied!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+    async function downloadPNG(btn) { const orig = btn.textContent; btn.textContent = '⏳ ...'; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const link = document.createElement('a'); link.download = 'upgrade-loop.png'; link.href = canvas.toDataURL('image/png'); link.click(); btn.textContent = '✓ Done!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+    async function downloadPDF(btn) { const orig = btn.textContent; btn.textContent = '⏳ ...'; try { const el = document.getElementById('report-container'); const r = el.getBoundingClientRect(); const pad = 32; const canvas = await html2canvas(document.body, { backgroundColor: '#020617', scale: 2, useCORS: true, ignoreElements: (e) => e.classList && e.classList.contains('toolbar'), x: r.left + window.scrollX - pad, y: r.top + window.scrollY - pad, width: r.width + pad * 2, height: r.height + pad * 2 }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const orientation = canvas.width > canvas.height ? 'landscape' : 'portrait'; const pdf = new jsPDF({ orientation, unit: 'px', format: [canvas.width, canvas.height], hotfixes: ['px_scaling'] }); pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height); pdf.save('upgrade-loop.pdf'); btn.textContent = '✓ Done!'; } catch (e) { btn.textContent = '✗ Failed'; } setTimeout(() => btn.textContent = orig, 2000); }
+  </script>
+</body>
+</html>

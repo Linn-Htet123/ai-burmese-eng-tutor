@@ -1,7 +1,7 @@
 # [PRODUCT NAME TBD]: Vision Document
 ### The adult English speaking product
 
-> **Naming note.** **Aye** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
+> **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
 **Version 1, 2026-09-05**
@@ -34,7 +34,7 @@ A second, related problem: **situations without a script.** A first job intervie
 
 ## What we are building
 
-A voice tutoring product for spoken English, built around a tutor character called **Aye**, that upgrades the way you already speak inside a four-week course tied to a real deadline.
+A voice tutoring product for spoken English, built around a tutor character called **May**, that upgrades the way you already speak inside a four-week course tied to a real deadline.
 
 Open a page, press one button, and you are in a live spoken lesson with a tutor who already knows your level, your goal, and what you got wrong last time. No booking, no waiting, no scheduling.
 
@@ -44,7 +44,7 @@ Five things define it.
 
 The core interaction, and the thing that does not exist elsewhere.
 
-The learner says a sentence. Aye confirms it works, then gives the smoother, more natural version. The learner says the better version back, out loud.
+The learner says a sentence. May confirms it works, then gives the smoother, more natural version. The learner says the better version back, out loud.
 
 Not correction. **Upgrading.** The difference is the entire product positioning. Correction says you were wrong. Upgrading says you were fine, here is better. For an adult who already speaks English and is sensitive about how they sound, that framing is the difference between using the product and quietly deleting it.
 
@@ -113,5 +113,5 @@ The wedge is chosen for sellability, not for size. It is the easiest version of 
 2. **Distribution.** How does a Burmese adult preparing for an interview find this. Barely discussed. Blocking, and probably more dangerous than price.
 3. **Completion rate.** The core bet is that a deadline produces finishing. Untested.
 4. **Payment rails.** Same unsolved problem as the kids product, minus the parent layer.
-5. **The product name.** Aye is settled as the tutor character. The product still needs its own name, and it blocks the landing page and every piece of marketing copy.
+5. **The product name.** May is settled as the tutor character. The product still needs its own name, and it blocks the landing page and every piece of marketing copy.
 6. **Whether automatic level placement from a spoken conversation is reliable.** First cohort is placed by hand.

@@ -1,6 +1,6 @@
 # Decisions Log
 
-> **Naming note.** **Aye** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
+> **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
 Running record of what was decided, why, and what was rejected. Rejected options are recorded so they are not re-argued from scratch, and so they can be revisited if the reasoning stops holding.
@@ -38,14 +38,14 @@ Software, design, finance, teaching, students.
 
 **Why.** Founder's explicit preference. The core problem is not field-specific.
 
-**Tension to watch:** it conflicts slightly with D-005, since interview content is more useful when it is field-specific. Handled by the two signup questions rather than by narrowing the market.
+**Tension to watch:** it conflicts slightly with D-005, since interview content is more useful when it is field-specific. Handled by the five signup questions in R-TP-7 rather than by narrowing the market.
 
 ---
 
 ## D-004: Upgrade loop as the core feature
 **Date:** 2026-09-04 · **Status:** decided
 
-Learner says a sentence, Aye confirms what worked and gives the smoother native version, learner says it back.
+Learner says a sentence, May confirms what worked and gives the smoother native version, learner says it back.
 
 **Why.** Founder's own idea and the strongest thing to come out of the session. This user's English is not wrong, it is not smooth, so error-correction framing is both inaccurate and alienating. The say-it-back step is the actual mechanism, not politeness.
 
@@ -146,7 +146,7 @@ Ask ten Burmese adults what they **currently spend** on English, not what they w
 ---
 
 ## D-013: Two signup questions instead of adaptive profiling
-**Date:** 2026-09-04 · **Status:** decided
+**Date:** 2026-09-04 · **Status:** superseded by D-033 (2026-09-07)
 
 What do you do, and what are you preparing for.
 
@@ -226,7 +226,7 @@ Changed for adults: new item cap drops from 10 to 15 down to 8 to 12, since upgr
 ---
 
 ## D-021: MVP ships levels 3 to 6 only
-**Date:** 2026-09-05 · **Status:** decided, and the main scope control in the plan
+**Date:** 2026-09-05 · **Status:** superseded by D-032 (2026-09-07)
 
 **Why.** Eleven levels multiplied by any topic is more content than one person authors in a month. Levels 3 to 6 cover the largest share of the market and include the bands where the upgrade loop already works.
 
@@ -298,7 +298,7 @@ Bank transfer, founder activates the account by hand.
 
 ---
 
-## D-028: Aye is never deliberately wrong
+## D-028: May is never deliberately wrong
 **Date:** 2026-09-05 · **Status:** decided, reverses a kids-product decision
 
 **Kids spec said:** occasionally be slightly wrong to invite correction. It worked because correcting the teacher is a thrill at eleven, and it forces production.
@@ -332,15 +332,65 @@ The kids whiteboard made concrete nouns comprehensible by drawing. Adult content
 | O-5 | Whether the deadline format actually produces completion | The core bet |
 | O-6 | Content authoring capacity for twelve units | Launch date |
 | O-7 | Raise amount | Investor conversations |
-| O-8 | **Product name.** Aye is settled as the tutor character only. The product is unnamed | Landing page, marketing, domain |
+| O-8 | **Product name.** May is settled as the tutor character only. The product is unnamed | Landing page, marketing, domain |
 
 ---
 
-## D-031: Aye is the tutor character, not the product
+## D-031: May is the tutor character, not the product
 **Date:** 2026-09-05 · **Status:** decided
 
-**Why.** Aye is a made-up character name for the voice the learner talks to. Using it as the product name conflates the persona with the business, and it makes the product hard to extend later: a second character, or a non-voice surface, would sit oddly under a person's name.
+**Why.** May is a made-up character name for the voice the learner talks to. Using it as the product name conflates the persona with the business, and it makes the product hard to extend later: a second character, or a non-voice surface, would sit oddly under a person's name.
 
-**Consequence.** The product needs its own name. Until one is chosen, all documents use the placeholder **[PRODUCT NAME TBD]**, which is a searchable string. Aye continues to appear throughout as the tutor, unchanged, in every behavioural requirement.
+**Consequence.** The product needs its own name. Until one is chosen, all documents use the placeholder **[PRODUCT NAME TBD]**, which is a searchable string. May continues to appear throughout as the tutor, unchanged, in every behavioural requirement.
 
 **Open:** the actual name. It blocks the landing page, the domain, and all marketing copy.
+
+---
+
+## D-032: MVP ships all eleven levels (0 to 10)
+**Date:** 2026-09-07 · **Status:** decided, supersedes D-021
+
+Reversal of D-021.
+
+**Why.** Founder call. Widens coverage from four levels to eleven so no learner sees a "coming soon" gate on their assigned level. Accepts the roughly 3× authoring load (from ~20 to 40 hours up to ~55 to 110 hours for the interviews pack).
+
+**Consequence.** Content authoring in R-CA-3 is now the top schedule risk. Founder no longer sits outside the MVP band, so the "resist building for yourself first" framing from D-021 no longer applies. The new failure mode is over-investing in the 8 to 10 bands where the founder is comfortable while lower bands stay incomplete. See BRD section 9 risk table.
+
+**Would revisit if:** authoring load proves impossible in the target timeline. Fallback is D-021's plan (levels 3 to 6 first, others gated).
+
+---
+
+## D-033: Five signup questions instead of two
+**Date:** 2026-09-07 · **Status:** decided, supersedes D-013
+
+Reversal of D-013.
+
+The five questions, in order:
+1. How you'd like to be called, and gender
+2. Age (picked from a range)
+3. What do you do (free text)
+4. What are you preparing for (dropdown; values come from the pack catalog per R-TP-1, coming-soon packs greyed out per R-TP-6)
+5. City of living
+
+**Why.** Founder call. Extra fields feed better session personalisation and future analytics. Cost is small — a few added seconds at signup, and all questions skippable except Q1.
+
+**Rejected for now:** full adaptive profiling (queued as R-TP-9 / backlog).
+
+**Would revisit if:** signup completion drops noticeably. Signup flow duration is still capped by R-ON-9 at under 3 minutes from landing to speaking.
+
+---
+
+## D-034: Tutor character renamed from Aye to May
+**Date:** 2026-09-07 · **Status:** decided
+
+The tutor character is now **May**. Previously **Aye**.
+
+**Why.** Founder preference. Both names fit the Burmese-peer persona in PRD Section 11. No change to the character's nationality, age range, or behavioural specification.
+
+**How applied.** Every "Aye" reference across `docs/requirements/` was replaced with "May". Older decision entries (D-004, D-028, D-031) now read "May" throughout; their original wording used "Aye". This entry is the historical record of the rename.
+
+**Rejected on the way:**
+- "Miss Gwen Stacy" — Marvel character, clashed with the Burmese-peer persona.
+- "Tr. May" — schoolteacher register, conflicts with the explicit "not a schoolteacher" line in PRD Section 11.
+
+**Product name is still TBD** — May is the character only, per D-031.

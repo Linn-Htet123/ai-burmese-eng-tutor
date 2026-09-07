@@ -1,7 +1,7 @@
 # [PRODUCT NAME TBD]: Product Requirements Document
 ### The adult English speaking product
 
-> **Naming note.** **Aye** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
+> **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
 **Version 2, 2026-09-05**
@@ -21,7 +21,7 @@ Every requirement has an ID and acceptance criteria. If a requirement cannot be 
 
 ## 1. What the product is
 
-A web app where a Burmese adult opens a page, presses one button, and is immediately in a live spoken English lesson with a tutor called Aye who already knows their level, their goal, and what they got wrong last time.
+A web app where a Burmese adult opens a page, presses one button, and is immediately in a live spoken English lesson with a tutor called May who already knows their level, their goal, and what they got wrong last time.
 
 Three commitments define it and everything below serves them.
 
@@ -77,9 +77,9 @@ The core structural feature. A level is not a difficulty slider. **It changes wh
 | R-LV-4 | Level determines the Burmese to English instruction ratio per 3.1 | Measurable from the session transcript. Ratio within 15 percentage points of target |
 | R-LV-5 | Level moves automatically on evidence, not on session count | Promotion requires the criteria in 3.3. Time served is never sufficient |
 | R-LV-6 | Level changes are announced to the learner in Burmese, with the reason | Learner sees a message naming what improved |
-| R-LV-7 | MVP ships levels 3 to 6 only. Levels 0 to 2 and 7 to 10 are gated behind a waitlist | Selecting an unbuilt level shows a Burmese message and offers the nearest built level |
+| R-LV-7 | MVP ships all levels 0 to 10 | Every level band per 3.1 has its authored content and stage sequence ready before public launch |
 
-⚠️ **R-LV-7 is the most important scope decision in this document.** Eleven levels multiplied by any topic is more content than one person can author in a month. Levels 3 to 6 cover the largest share of the target market and include the bands where the upgrade loop already works. Ship those, prove the format, then extend outward. The founder himself sits at 8 to 10, which means **he is not in the MVP's own target band**, and he must resist building for himself first.
+⚠️ **R-LV-7 is the most important scope decision in this document.** Reversed from earlier drafts. MVP now ships all 11 level bands. This roughly triples the authoring work versus the earlier levels 3 to 6 plan — from 20 to 40 hours up to 55 to 110 hours. Content authoring in R-CA-3 is now the top schedule risk, and the launch date depends on whether the founder can absorb that authoring load. See the decisions log for the rationale behind this reversal.
 
 ### 3.3 Promotion and demotion
 
@@ -127,11 +127,11 @@ The distinction matters because packs are expensive to author and interests are 
 
 | ID | Requirement | Status |
 |---|---|---|
-| R-TP-7 | Two signup questions only: what do you do, what are you preparing for | MVP |
-| R-TP-8 | Aye references the learner's actual job and interests by name in sessions | MVP |
+| R-TP-7 | Five signup questions: (1) how to be called and gender, (2) age (picked from a range, not free-text number), (3) what you do (free text), (4) what you are preparing for (dropdown; values come from the pack catalog per R-TP-1; coming-soon packs greyed out per R-TP-6), (5) city of living. All skippable except question 1 | MVP |
+| R-TP-8 | May references the learner's actual job and interests by name in sessions | MVP |
 | R-TP-9 | Full adaptive profiling: automatically infers preferred topics, habits, difficulty tolerance and adjusts content selection | BACKLOG |
 
-R-TP-9 is deliberately last. Two questions capture most of the benefit at almost none of the cost, and the expensive version is not distinguishable to a learner in their first month.
+R-TP-9 is deliberately last. Five short signup questions capture most of the benefit at almost none of the cost, and the expensive version is not distinguishable to a learner in their first month.
 
 ---
 
@@ -145,7 +145,7 @@ The most important flow in the product. Most people who abandon do it here.
 Landing page (Burmese)
    -> Press "Try a free session"
    -> Phone number or email + password           [R-ON-1]
-   -> Two questions: your job / your goal        [R-ON-2]
+   -> Five questions (see R-TP-7)                [R-ON-2]
    -> Mic permission, with a 5-second test       [R-ON-3]
    -> Placement conversation, 8 to 10 minutes    [R-ON-4]
    -> Level shown + first session plan           [R-ON-5]
@@ -157,9 +157,9 @@ Landing page (Burmese)
 | ID | Requirement | Acceptance criteria |
 |---|---|---|
 | R-ON-1 | Signup takes phone number or email plus password. No social login for MVP | Account created in under 30 seconds. Phone is primary since Myanmar users may not use email daily |
-| R-ON-2 | Exactly two questions, both free text, both skippable | Skipping assigns a generic profile. Never blocks progress |
+| R-ON-2 | Exactly the five questions defined in R-TP-7. Mix of dropdown, range picker, and free text | Skipping a question assigns a generic default for that field. Never blocks progress |
 | R-ON-3 | Microphone permission requested with an in-page explanation in Burmese **before** the browser prompt, then a 5-second record-and-playback test | Learner hears their own voice played back before the placement starts. Failure shows a Burmese troubleshooting page, not a browser error |
-| R-ON-4 | Placement is a live spoken conversation of 8 to 10 minutes, not a quiz | Produces a level 0 to 10, a confidence score, and a transcript. Never presented as a test. Aye opens with conversation, not instructions |
+| R-ON-4 | Placement is a live spoken conversation of 8 to 10 minutes, not a quiz | Produces a level 0 to 10, a confidence score, and a transcript. Never presented as a test. May opens with conversation, not instructions |
 | R-ON-5 | After placement the learner sees their level in Burmese with a plain-language description of what it means, plus what the first session will cover | No numeric score shown without an explanation of it |
 | R-ON-6 | The placement session is **free** and complete. The paywall appears only after it ends | Learner experiences the actual product before being asked for money |
 | R-ON-7 | **The placement session audio is recorded and retained** | Non-negotiable. Without it there is no before-and-after clip, which is the entire marketing asset. Retroactive capture is impossible |
@@ -176,7 +176,7 @@ Landing page (Burmese)
 
 ### 6.1 Shape
 
-30 minutes. No mid-session break. Stage composition is set by level per section 3.1. Below is the level 4 to 6 sequence, which is what MVP ships.
+30 minutes. No mid-session break. Stage composition is set by level per section 3.1. Below is the level 4 to 6 sequence as a reference; variations for other bands are described after the table. All 11 level bands ship in MVP (see R-LV-7).
 
 | # | Stage | Time | What happens |
 |---|---|---|---|
@@ -199,8 +199,8 @@ At levels 0 to 3, stage 3 expands and stage 4 shrinks, and an explicit grammar s
 | R-SE-4 | Learner can pause. A paused session holds for 10 minutes, then ends and saves progress | Resumed session continues at the same stage |
 | R-SE-5 | Learner can end early. Everything completed still counts, review items still written | No penalty framing. Never "you quit" |
 | R-SE-6 | On-screen: current stage, time remaining, a live transcript of the last few exchanges, and the phrase currently being practised | Transcript matters. Learners at this level read faster than they hear |
-| R-SE-7 | Learner can request Burmese explanation at any moment by pressing one button or saying it in Burmese | Aye switches to Burmese, explains, returns to the stage |
-| R-SE-8 | Learner can interrupt Aye by speaking | Aye stops within 300ms of detected learner speech |
+| R-SE-7 | Learner can request Burmese explanation at any moment by pressing one button or saying it in Burmese | May switches to Burmese, explains, returns to the stage |
+| R-SE-8 | Learner can interrupt May by speaking | May stops within 300ms of detected learner speech |
 | R-SE-9 | Session audio recorded in full, with consent captured at signup | Learner can play back any past session |
 | R-SE-10 | Session produces: transcript, updated review items, three recap items, updated fluency metrics | All five artefacts written before the session is marked complete |
 
@@ -219,14 +219,14 @@ The core interaction. Specified as a state machine because it must behave identi
 ### 7.1 The mechanic
 
 ```
-S1  PROMPT      Aye asks a question or sets a situation
+S1  PROMPT      May asks a question or sets a situation
 S2  LEARNER     Learner answers out loud, however they can
-S3  ACKNOWLEDGE Aye names, specifically, what worked
+S3  ACKNOWLEDGE May names, specifically, what worked
                   "That's clear, and 'responsible for' is exactly right"
-S4  UPGRADE     Aye gives ONE better version
+S4  UPGRADE     May gives ONE better version
                   "A native speaker would say: 'I led the migration end to end'"
 S5  REPEAT      Learner says the upgraded version out loud     [required]
-S6  CONFIRM     Aye confirms, or asks for one more run if delivery was hesitant
+S6  CONFIRM     May confirms, or asks for one more run if delivery was hesitant
 S7  LOG         Upgraded phrase written to the review queue
 ```
 
@@ -237,12 +237,12 @@ S7  LOG         Upgraded phrase written to the review queue
 | R-UL-1 | Every loop passes S3 before S4. Acknowledgement is never skipped | Verifiable in transcripts. 100% of loops |
 | R-UL-2 | Acknowledgement names a specific element, never generic praise | "Good job" and "well done" are prohibited strings in acknowledgement position |
 | R-UL-3 | Exactly one upgrade per turn. Never a list | Two upgrades in one turn is a defect |
-| R-UL-4 | Aye never interrupts the learner mid-sentence | Interruption by Aye during learner speech is a defect |
+| R-UL-4 | May never interrupts the learner mid-sentence | Interruption by May during learner speech is a defect |
 | R-UL-5 | S5 is required. If the learner does not repeat, prompt once, then continue | Never prompt twice. Fighting the learner costs more than the missed rep |
-| R-UL-6 | Upgrade changes phrasing, never content | Aye never rewrites what the learner meant |
+| R-UL-6 | Upgrade changes phrasing, never content | May never rewrites what the learner meant |
 | R-UL-7 | If the sentence is genuinely wrong, correct it in the same warm frame | No switch into teacher register |
 | R-UL-8 | Upgrades are drawn from the pack's authored **upgrade pool**, not improvised | Improvised upgrades outside the pool are logged and flagged for review |
-| R-UL-9 | If nothing in the pool matches, Aye may generate one, but it is flagged for founder review before entering the review queue | Generated upgrades are visible in an admin queue |
+| R-UL-9 | If nothing in the pool matches, May may generate one, but it is flagged for founder review before entering the review queue | Generated upgrades are visible in an admin queue |
 
 ⚠️ **R-UL-8 and R-UL-9 are the quality firewall.** A model asked for "more natural English" will produce confident nonsense, and a paying adult who is taught wrong English will notice and leave. The authored pool is also what makes cached TTS possible for scripted lines. Accept the authoring cost.
 
@@ -284,7 +284,7 @@ Grammar is taught, but never as the primary activity and never as rules first.
 
 Five minutes, fixed structure, and the single strongest retention mechanism in the product.
 
-Aye names **up to three specific things that held you back this session.** Not three errors. Three things that slowed the learner down or made them sound less capable than they are.
+May names **up to three specific things that held you back this session.** Not three errors. Three things that slowed the learner down or made them sound less capable than they are.
 
 Per item:
 
@@ -349,8 +349,8 @@ For a child, repeated failure produces frustration. For a paying adult it produc
 |---|---|---|
 | R-FA-1 | Three consecutive failures on one item: stop drilling it. Step down to something the learner can do. Return next session | Step-down path defined for every unit in every pack |
 | R-FA-2 | Every session must contain at least one visible win, named explicitly at the end | Something the learner can point at: a phrase they now say smoothly that they could not last week |
-| R-FA-3 | If the learner apologises for their English, Aye neither agrees nor over-reassures. One short line, then back to work | Over-reassurance reads as pity |
-| R-FA-4 | If a learner stalls for more than 5 seconds, Aye offers a turn-holding filler first, then the word | Teaching the recovery move is worth more than supplying the answer |
+| R-FA-3 | If the learner apologises for their English, May neither agrees nor over-reassures. One short line, then back to work | Over-reassurance reads as pity |
+| R-FA-4 | If a learner stalls for more than 5 seconds, May offers a turn-holding filler first, then the word | Teaching the recovery move is worth more than supplying the answer |
 | R-FA-5 | Three or more step-downs in a session triggers a level review | See R-LV-9 |
 | R-FA-6 | Copy never uses failure language. No "wrong", no "you failed", no red | Verifiable by string audit of all Burmese and English UI copy |
 
@@ -365,7 +365,7 @@ For a child, repeated failure produces frustration. For a paying adult it produc
 
 ---
 
-## 11. Aye: persona specification
+## 11. May: persona specification
 
 **Presentation.** Burmese woman, late twenties to early thirties. A professional peer with better English, not a schoolteacher. Someone who has worked in English and is showing you how it is done.
 
@@ -386,7 +386,7 @@ For a child, repeated failure produces frustration. For a paying adult it produc
 
 **Differences from the kids persona, deliberately.** No cutesiness. No stickers. No "I missed you". No cartoon face. Adults find it patronising, and this buyer is paying for competence.
 
-⚠️ Dropped from the kids spec: "occasionally be slightly wrong to invite correction." It worked on children because correcting the teacher is a thrill at eleven. An adult paying money who catches the tutor being wrong concludes the product is unreliable. **Aye is never deliberately wrong.**
+⚠️ Dropped from the kids spec: "occasionally be slightly wrong to invite correction." It worked on children because correcting the teacher is a thrill at eleven. An adult paying money who catches the tutor being wrong concludes the product is unreliable. **May is never deliberately wrong.**
 
 ---
 
@@ -450,7 +450,7 @@ The hidden work item, and the most likely reason a one-month timeline slips.
 |---|---|---|
 | R-CA-1 | All content authored in a structured format, version-controlled, never improvised at runtime | |
 | R-CA-2 | Each unit specifies: situation brief in Burmese, target questions, upgrade pool, translation pairs, grammar point where applicable, fillers taught, and a step-down target | Every field present for every unit before it can be marked ready |
-| R-CA-3 | MVP needs 12 units for the interview pack, authored for levels 3 to 6 | |
+| R-CA-3 | MVP needs 12 units for the interview pack, authored for all levels 0 to 10 | |
 | R-CA-4 | A minimal internal authoring and review tool: list units, edit fields, mark ready, view flagged model-generated upgrades | Not a CMS. A single admin page is sufficient |
 | R-CA-5 | Founder reviews every flagged upgrade from R-UL-9 weekly | This is the quality loop that keeps the pool honest |
 
@@ -458,7 +458,7 @@ The hidden work item, and the most likely reason a one-month timeline slips.
 
 Each unit carries an identifier and a week number. It holds a Burmese situation brief for stage 2, a set of target questions for the core practice stage, and the upgrade pool, which is a list of trigger phrases paired with their upgraded forms and a type label such as verb choice or collocation. It also holds translation pairs for the drill stage, a grammar point where the level calls for one, the filler phrases taught in that unit, and a step-down target naming the easier unit to fall back to.
 
-⚠️ **Estimate the authoring time before committing to a launch date.** Twelve units at the specified level of detail is plausibly 20 to 40 hours of real work, and it is not compressible by writing code faster. This is the item most likely to blow the schedule, and it is the one a technical founder is most likely to under-budget.
+⚠️ **Estimate the authoring time before committing to a launch date.** Twelve units × 11 level bands at the specified level of detail is plausibly 55 to 110 hours of real work, and it is not compressible by writing code faster. This is the item most likely to blow the schedule, and it is the one a technical founder is most likely to under-budget. R-LV-7 is the decision that drove this multiplier — revisit if the authoring load proves impossible.
 
 ---
 
@@ -466,8 +466,8 @@ Each unit carries an identifier and a week number. It holds a Burmese situation 
 
 | ID | Requirement | Acceptance criteria |
 |---|---|---|
-| R-TE-1 | Response latency under 1 second from end of learner speech to start of Aye's speech | Product requirement, not infrastructure polish. Retrieval practice under time pressure is the method |
-| R-TE-2 | Learner can interrupt Aye. Aye stops within 300ms | |
+| R-TE-1 | Response latency under 1 second from end of learner speech to start of May's speech | Product requirement, not infrastructure polish. Retrieval practice under time pressure is the method |
+| R-TE-2 | Learner can interrupt May. May stops within 300ms | |
 | R-TE-3 | Aggressive client-side voice activity detection | Silence sent as audio is billed as audio. Cost control as well as latency |
 | R-TE-4 | Per-stage model context with a compact state summary passed forward | Cost control and quality control |
 | R-TE-5 | Reconnect must not resend prior audio | Resent audio is billed again. A known and avoidable cost leak |
@@ -491,7 +491,7 @@ Signup started, signup completed, mic test passed or failed, placement started, 
 * Web app, Burmese UI, mobile-first
 * Signup, two questions, mic test
 * Placement session with manual founder review
-* Levels 3 to 6, with automatic promotion and demotion
+* All levels 0 to 10, with automatic promotion and demotion
 * One goal pack: job interviews, 12 units
 * Upgrade loop with an authored pool
 * Two-direction translation drills, untimed
@@ -505,7 +505,6 @@ Signup started, signup completed, mic test passed or failed, placement started, 
 * Internal authoring and review page
 
 **Out, deliberately:**
-* Levels 0 to 2 and 7 to 10
 * Packs beyond interviews
 * Timed speed sprint
 * Subscription mechanics
@@ -524,15 +523,13 @@ Signup started, signup completed, mic test passed or failed, placement started, 
 
 Ordered. Nothing is discarded, only queued.
 
-1. **Burmese-to-English speed sprint.** Aye gives a Burmese sentence, learner has 5 seconds to produce the English. Attacks the stall more directly than anything else in the plan. Held only until the untimed drill works, then it should move up fast
-2. **Levels 7 to 10.** Where the founder himself sits. Resist doing this first
-3. **Levels 0 to 2.** Larger market, more content, more hand-holding
-4. **Workplace-daily pack**, then client calls, presentations, negotiation
-5. **Post-course subscription mechanics**
-6. **Automated payment rails**
-7. **Full adaptive personalisation.** Expensive, and mostly redundant against the two signup questions
-8. **Cohort format.** Cheaper per learner and adds social accountability, which is the strongest known lever on completion. Worth reaching for if solo completion disappoints
-9. **Native app**
+1. **Burmese-to-English speed sprint.** May gives a Burmese sentence, learner has 5 seconds to produce the English. Attacks the stall more directly than anything else in the plan. Held only until the untimed drill works, then it should move up fast
+2. **Workplace-daily pack**, then client calls, presentations, negotiation
+3. **Post-course subscription mechanics**
+4. **Automated payment rails**
+5. **Full adaptive personalisation.** Expensive, and mostly redundant against the signup questions
+6. **Cohort format.** Cheaper per learner and adds social accountability, which is the strongest known lever on completion. Worth reaching for if solo completion disappoints
+7. **Native app**
 
 ---
 
@@ -563,4 +560,4 @@ Secondary, in order: does the before-and-after clip sound different to a neutral
 | O-6 | Viber and Messenger business messaging feasibility | Notification channel | Verify before promising |
 | O-7 | Authoring hours for 12 units | Launch date | Estimate this week |
 | O-8 | Does the deadline actually produce completion | The core bet | Cohort 1 |
-| O-9 | **Product name.** Aye is the tutor character. The product is unnamed | Landing page, all marketing copy, domain | |
+| O-9 | **Product name.** May is the tutor character. The product is unnamed | Landing page, all marketing copy, domain | |

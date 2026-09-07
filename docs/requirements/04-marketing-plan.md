@@ -1,7 +1,7 @@
 # [PRODUCT NAME TBD]: Marketing and Go-to-Market Plan
 ### The adult English speaking product
 
-> **Naming note.** **Aye** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
+> **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
 **Version 1, 2026-09-05**
@@ -171,7 +171,7 @@ You think in Burmese. You translate. By the time the English is ready, the conve
 
 That isn't a grammar problem. It's speed. Speed only comes from speaking, and speaking is the one thing every course you've bought didn't make you do.
 
-Aye asks you real interview questions. You answer however you can. She tells you what worked, then gives you the version a native speaker would use, and you say it back. Twelve sessions, four weeks, in Burmese and English.
+May asks you real interview questions. You answer however you can. She tells you what worked, then gives you the version a native speaker would use, and you say it back. Twelve sessions, four weeks, in Burmese and English.
 
 **What to avoid:**
 * "Fluent in 30 days". Nobody believes it and it attracts the wrong buyer.
