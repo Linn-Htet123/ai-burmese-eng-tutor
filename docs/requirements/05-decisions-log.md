@@ -394,3 +394,85 @@ The tutor character is now **May**. Previously **Aye**.
 - "Tr. May" — schoolteacher register, conflicts with the explicit "not a schoolteacher" line in PRD Section 11.
 
 **Product name is still TBD** — May is the character only, per D-031.
+
+---
+
+## D-035: Voice traffic is proxied through our backend, not browser-direct to Gemini
+**Date:** 2026-09-07 · **Status:** decided
+
+Browser ↔ our backend ↔ Gemini Live. The browser never holds a Google API key.
+
+**Why.** Three server-side needs beat the ~100–200ms proxy cost: the D-011 item log is captured in-process instead of surviving a round-trip from a flaky mobile client; token metering (R-TE-8) is counted on the way through and cannot be skipped; API keys stay on the server, so no short-lived token system to build. The latency budget in the voice pipeline design still fits under R-TE-1's 1 second.
+
+**Rejected:** direct browser → Gemini (lowest latency, kept as documented fallback if the week-one spike blows the budget); hybrid direct-audio + proxied-control (2× the code for a problem we do not have yet).
+
+**Would revisit if:** week-one spike measures end-to-end p75 above 1 second.
+
+Design: `docs/technical-designs/02-voice-pipeline.md`.
+
+---
+
+## D-036: WebSocket transport with mandatory heartbeat, not WebRTC
+**Date:** 2026-09-07 · **Status:** decided
+
+Browser ↔ backend audio runs over a WebSocket carrying Opus frames, with a ping/pong heartbeat (20s interval, two missed pongs → reconnect with backoff) and stateful resume by session ID.
+
+**Why.** 2–3 days build versus 1.5–2 weeks for DIY WebRTC (media server + TURN = an ops burden a solo founder should not take on in month one). The heartbeat is mandatory because silent middlebox disconnects on mobile carriers are a known failure mode — the founder hit exactly this class of bug on a previous product where the WebSocket had no heartbeat.
+
+**Rejected:** DIY WebRTC (build + ops cost); managed WebRTC / LiveKit Cloud (strongest alternative, ~$50–100/month at target scale — documented as the upgrade path if real-world Myanmar testing shows WebSocket audio is too choppy); HTTP chunked streaming (breaks barge-in R-SE-8 and likely the 1s budget).
+
+**Would revisit if:** Myanmar-mobile testing shows unacceptable audio choppiness (TCP retransmit stalls) → move to LiveKit Cloud.
+
+---
+
+## D-037: Hosting on Railway Singapore, not Vercel
+**Date:** 2026-09-07 · **Status:** decided
+
+**Why.** Researched 2026-09-07: Vercel's native WebSocket support (public beta, June 2026) force-closes connections at the function max duration — 5 minutes on Hobby, ~13 minutes on Pro, 30 minutes only behind a second beta flag — and Next.js needs an experimental upgrade API on top. Our session is 30 minutes of continuous audio; forced mid-conversation drops trigger Gemini re-attach costs against the spirit of R-TE-5. Railway runs plain long-lived processes, has a Singapore region (~30–50ms from Yangon), and the founder already operates it for another product. ~$10–25/month at MVP scale.
+
+**Consequence.** Audio recordings go to Cloudflare R2 (S3-compatible, zero egress) instead of Vercel Blob. Storage design: `03-audio-storage.md`.
+
+**Rejected:** all-Vercel (duration limits, beta-on-experimental stack); Vercel app + tiny Railway relay (two platforms for a solo founder).
+
+**Would revisit if:** Vercel ships GA WebSockets with ≥30-minute connections.
+
+---
+
+## D-038: Next.js frontend + FastAPI (Python) backend
+**Date:** 2026-09-07 · **Status:** decided
+
+Two services on Railway: a Next.js frontend (TypeScript) and a FastAPI backend (Python) that holds the learner WebSocket, owns the Gemini Live connection, and will host the LangGraph-based session engine and plan generation.
+
+**Why.** Founder call, two drivers: LangGraph fits the session-stage state machine and the non-realtime LLM work (plan generation, item-log processing, placement scoring), and Python is its first-class ecosystem; and the founder is deliberately investing in Python/FastAPI skills. Guardrail: the live audio loop uses no framework — raw WebSocket to Gemini — because every layer in the hot path costs latency (R-TE-1).
+
+**Rejected:** Next.js full-stack / TypeScript-only with LangGraph JS (fastest to ship, one service — reversed by the founder in favour of the Python learning investment and ecosystem); hybrid TS-now-Python-later (two languages eventually anyway, without the learning benefit now).
+
+**Cost accepted:** two deploys, CORS/auth wiring between services, and a slower week one while learning FastAPI + WebSockets.
+
+**Would revisit if:** the week-one spike stalls on Python unfamiliarity badly enough to threaten the schedule — fallback is the TypeScript monolith with LangGraph JS.
+
+---
+
+## D-039: Session audio — server-side two-track capture to Cloudflare R2
+**Date:** 2026-09-07 · **Status:** decided
+
+Both voices captured in the FastAPI proxy (audio already flows through it per D-035), stored as two separate Opus tracks (learner + May), buffered on server disk during the session, uploaded to Cloudflare R2 at session end, background-transcoded with ffmpeg to a mixed M4A for playback, served via 15-minute presigned URLs after an owner-or-founder check (R-TE-10).
+
+**Why.** Server-side capture makes the least reliable machine in the system (a mid-range phone on Myanmar mobile data) irrelevant to the product's most irreplaceable artefact (R-ON-7). Separate tracks keep learner-only audio cuttable for before/after marketing clips — un-mixing a combined file is impossible. M4A because Opus playback is unreliable on older Safari/iOS, exactly our audience. R2 because reads are free (replays cost nothing) after Vercel Blob died with the Vercel hosting plan (D-037).
+
+**Rejected:** browser-side recording (depends on the flakiest machine); one mixed file (kills learner-only clips forever); streaming multipart upload (upgrade path, not MVP); raw Opus playback (fails on old iPhones); audio in Postgres (wrong tool).
+
+**Would revisit if:** recordings become revenue-critical enough that losing one to a rare server crash is unacceptable → move to streaming multipart upload.
+
+Design: `docs/technical-designs/03-audio-storage.md`.
+
+---
+
+## D-040: Recordings are kept indefinitely, beyond course expiry
+**Date:** 2026-09-07 · **Status:** decided
+
+Recordings are not deleted when course access expires at 8 weeks (D-029). Deletion happens only on learner request, and then completely (all files plus database row).
+
+**Why.** The before/after clip is the marketing asset, the retention tool, and the investor demo (vision doc); it gains value with time. Storage cost is trivial (~$0.015/GB-month; the whole first cohort is ~12 GB).
+
+**Would revisit if:** per-learner audio ever approaches ~1 GB, or a privacy/regulatory requirement forces a retention window.
