@@ -1,7 +1,7 @@
 # [PRODUCT NAME TBD]: Business Requirements Document
 ### The adult English speaking product
 
-> **Naming note.** **Aye** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
+> **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
 **Version 1, 2026-09-05**
@@ -18,7 +18,7 @@ Two revenue events, in order: the course sells, the subscription retains. Build 
 
 The interview course is the wedge, not the product. The product is a levelled speaking tutor: eleven levels, each changing what a session is made of, and a growing library of goal packs. Interviews first, then workplace daily, then client calls, presentations, negotiation.
 
-That matters commercially for one reason. A single course is a one-off purchase with a hard ceiling. Levels plus packs give a learner somewhere to go next, which is what turns a course business into a retention business. But it is also far more content, so it is sequenced deliberately: ship four levels and one pack, prove completion, then extend.
+That matters commercially for one reason. A single course is a one-off purchase with a hard ceiling. Levels plus packs give a learner somewhere to go next, which is what turns a course business into a retention business. But it is also far more content, so it is sequenced by pack rather than by level: ship all eleven levels but only one pack (interviews) in MVP, prove completion, then extend to more packs.
 
 ---
 
@@ -199,7 +199,7 @@ The Thailand and diaspora segments are worth separating out early. They have bet
 * Founder is a member of the target market, which is a genuine research advantage and a genuine sampling bias. His instincts about the product are probably right. His instincts about the market size are one data point.
 * No Burmese language or teaching hire. Content authoring is on the founder.
 
-⚠️ **Content authoring is the unbudgeted cost in this plan.** Twelve interview units at the specified level of detail is plausibly 20 to 40 hours of work that cannot be sped up by writing code faster. A technical founder will under-budget this. Estimate it before committing to a launch date.
+⚠️ **Content authoring is the unbudgeted cost in this plan.** Twelve interview units × 11 level bands at the specified level of detail is plausibly 55 to 110 hours of work that cannot be sped up by writing code faster. A technical founder will under-budget this. Estimate it before committing to a launch date.
 
 ---
 
@@ -214,8 +214,8 @@ The Thailand and diaspora segments are worth separating out early. They have bet
 | Payment rails in Myanmar | High | Unsolved, carried from kids product |
 | Latency breaks the conversation | Medium | Retrieval practice under time pressure is the product. Slow response destroys it |
 | Founder is the only sample | Medium | The ten interviews |
-| Scope creep from the level system | **High** | Eleven levels times any topic is not authorable in a month. MVP is levels 3 to 6 and one pack. See PRD R-LV-7 |
-| Founder builds for his own level first | Medium | He sits at level 8 to 10, outside the MVP band. Named explicitly so it can be resisted |
+| Scope creep from the level system | **High** | MVP now covers all eleven levels for one pack (interviews) — ~3× the authoring load of levels 3–6. See PRD R-LV-7 |
+| Founder over-invests in his own bands (8 to 10) | Medium | All bands now ship in MVP. Risk shifts from ignoring the lower bands to spending time polishing 8–10 while 0–3 sit incomplete |
 | Automatic level placement is unreliable | Medium | First 50 placements reviewed by hand before any automation |
 | Viber and Messenger business messaging not approved | Medium | Verify before promising it. SMS fallback is worse and costs more |
 
@@ -227,7 +227,7 @@ The Thailand and diaspora segments are worth separating out early. They have bet
 2. **Price.** See section 4.
 3. **Distribution.** Undiscussed.
 4. **Content authoring capacity.** Twelve sessions of interview content, properly scripted with target upgrades, is real work. Estimate it before committing to a launch date.
-4a. **Level coverage.** MVP ships levels 3 to 6. Every level added is another authoring pass across the pack.
+4a. **Level coverage.** MVP ships all 11 levels (0 to 10) per R-LV-7. Every band is another authoring pass across the pack; the ~3× cost multiplier is accepted.
 5. **The raise.** No amount set. Frame it as twelve months of runway plus content authoring plus voice API for the first cohorts, then work backwards.
 
 ---
