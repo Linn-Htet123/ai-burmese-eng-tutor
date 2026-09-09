@@ -14,6 +14,7 @@ Planning phase. No code yet — only docs. System design is in progress.
   - `03-product-requirements.md` — PRD (contains `R-xx-n` requirement IDs)
   - `04-marketing-plan.md`
   - `05-decisions-log.md` — decisions log (`D-xxx` IDs)
+  - `06-competitor-landscape.md` — competitor research (snapshot 2026-09-08)
 - `docs/technical-designs/` — design docs. Copy `_template.md` for new docs. Every doc must cite the PRD IDs it implements (e.g. `R-TE-1`).
 
 ## Product facts to remember
@@ -33,3 +34,11 @@ Planning phase. No code yet — only docs. System design is in progress.
 - PRD requirements: `R-xx-n` (e.g. `R-TE-1`, `R-PL-5`).
 - Decisions: `D-xxx` (e.g. `D-011`).
 - Every technical-design doc cites the PRD IDs it implements.
+
+## Diagrams
+- **Before drawing, follow the `diagram-selection` skill** (auto-triggers, or see `.claude/skills/diagram-selection/SKILL.md`) to pick the right diagram type — sequence vs flowchart vs C4 — based on what the design is showing. Prevents flowchart-for-a-round-trip mistakes.
+- Use the `drawio:drawio` skill for architecture and flow diagrams. It auto-triggers when you ask for a diagram, or invoke it explicitly with `/drawio:drawio`.
+- Prefer Mermaid input — the skill converts it to `.drawio` via the draw.io Desktop CLI (installed at `/Applications/draw.io.app`).
+- Store `.drawio` source files in `docs/requirements/diagrams/`. Also export a `.svg` alongside for GitHub preview.
+- File naming: `NN-short-title.drawio` + `NN-short-title.svg` (e.g. `04-voice-pipeline.drawio`).
+- Every technical-design doc that has a diagram should link to both the `.drawio` (source) and `.svg` (preview).

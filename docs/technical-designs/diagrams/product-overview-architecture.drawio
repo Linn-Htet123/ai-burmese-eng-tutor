@@ -1,0 +1,141 @@
+<mxfile host="Electron">
+  <diagram id="-MWRRfH6HB2UZzNfndn4" name="pageWithNumber">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=16;fontColor=light-dark(#333333,#cccccc);align=left;verticalAlign=top;spacingLeft=196;" value="Product Architecture — High Level" vertex="1">
+          <mxGeometry height="24" width="892" x="20" y="10" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Learner&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Person]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Phone browser (Chrome/Safari)&amp;lt;br/&amp;gt;mic + speaker · no install ·&lt;br&gt;Burmese-first&lt;/div&gt;" mermaidId="n:learner" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=76;whiteSpace=wrap;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Learner&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Person]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Phone browser (Chrome/Safari)&amp;lt;br/&amp;gt;mic + speaker · no install ·&lt;br&gt;Burmese-first&lt;/div&gt;" id="3">
+          <mxCell parent="1" style="rounded=1;absoluteArcSize=1;arcSize=76;whiteSpace=wrap;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="99" width="216" x="150" y="258" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="4" parent="1" style="ellipse;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="99" width="99" x="208" y="172" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Founder&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Person]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Admin screens · manual payment&lt;br&gt;check&amp;lt;br/&amp;gt;QA · content authoring&lt;/div&gt;" mermaidId="n:founder" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=76;whiteSpace=wrap;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Founder&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Person]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Admin screens · manual payment&lt;br&gt;check&amp;lt;br/&amp;gt;QA · content authoring&lt;/div&gt;" id="5">
+          <mxCell parent="1" style="rounded=1;absoluteArcSize=1;arcSize=76;whiteSpace=wrap;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="99" width="216" x="466" y="258" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="6" parent="1" style="ellipse;html=1;fillColor=#08427B;strokeColor=#073B6F;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="99" width="99" x="524" y="172" as="geometry" />
+        </mxCell>
+        <UserObject label="&lt;div style=&quot;font-size:16px;font-weight:bold;&quot;&gt;One Deploy — Railway (Singapore)&lt;/div&gt;&lt;div style=&quot;font-size:14px;font-weight:normal;margin-top:4px;&quot;&gt;[SYSTEM]&lt;/div&gt;" mermaidId="n:app" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;strokeWidth=1;dashed=1;dashPattern=5 5;verticalAlign=top;align=center;spacingTop=2;fontSize=16;fontStyle=1;fontColor=#444444;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:16px;font-weight:bold;&quot;&gt;One Deploy — Railway (Singapore)&lt;/div&gt;&lt;div style=&quot;font-size:14px;font-weight:normal;margin-top:4px;&quot;&gt;[SYSTEM]&lt;/div&gt;" id="7">
+          <mxCell parent="1" style="rounded=1;absoluteArcSize=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;strokeWidth=1;dashed=1;dashPattern=5 5;verticalAlign=top;align=center;spacingTop=2;fontSize=16;fontStyle=1;fontColor=#444444;fontFamily=Open Sans,sans-serif;fixDash=1;" vertex="1">
+            <mxGeometry height="475" width="632" x="150" y="693" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Next.js Frontend&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: TypeScript]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Learner UI + admin UI&amp;lt;br/&amp;gt;mobile-first&lt;/div&gt;" mermaidId="n:frontend" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Next.js Frontend&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: TypeScript]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Learner UI + admin UI&amp;lt;br/&amp;gt;mobile-first&lt;/div&gt;" id="8">
+          <mxCell parent="7" style="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="87" width="216" x="50" y="100" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;FastAPI Backend&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Python]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Auth · session planner (R-SE-1)&amp;lt;br/&amp;gt;Live conductor + voice proxy&amp;lt;br/&amp;gt;Upgrade-loop shadow (R-UL)&amp;lt;br/&amp;gt;Level engine (R-LV-8/9)&amp;lt;br/&amp;gt;Payments + admin API&lt;/div&gt;" mermaidId="n:backend" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;FastAPI Backend&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Python]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Auth · session planner (R-SE-1)&amp;lt;br/&amp;gt;Live conductor + voice proxy&amp;lt;br/&amp;gt;Upgrade-loop shadow (R-UL)&amp;lt;br/&amp;gt;Level engine (R-LV-8/9)&amp;lt;br/&amp;gt;Payments + admin API&lt;/div&gt;" id="9">
+          <mxCell parent="7" style="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="87" width="216" x="366" y="100" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;PostgreSQL&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Railway Postgres,&lt;br&gt;private net]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Learners · sessions · review&lt;br&gt;items&amp;lt;br/&amp;gt;packs · payments · consents&lt;/div&gt;" mermaidId="n:db" mermaidBaseStyle="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15.84;spacingTop=13;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;PostgreSQL&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Railway Postgres,&lt;br&gt;private net]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Learners · sessions · review&lt;br&gt;items&amp;lt;br/&amp;gt;packs · payments · consents&lt;/div&gt;" id="10">
+          <mxCell parent="7" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15.84;spacingTop=13;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="138" width="216" x="50" y="287" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Notifier&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Scheduled job]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Absence rules R-FA-7..9&amp;lt;br/&amp;gt;cap 3 messages&lt;/div&gt;" mermaidId="n:notifier" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Notifier&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Scheduled job]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Absence rules R-FA-7..9&amp;lt;br/&amp;gt;cap 3 messages&lt;/div&gt;" id="11">
+          <mxCell parent="7" style="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#438DD5;strokeColor=#3C7FC0;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="87" width="216" x="366" y="287" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Gemini Live&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Software System]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;May&amp;#39;s voice + brain&amp;lt;br/&amp;gt;STT + LLM + TTS one socket&amp;lt;br/&amp;gt;Fresh context per stage (R-SE-3)&lt;/div&gt;" mermaidId="n:gemini" mermaidBaseStyle="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#999999;strokeColor=#8A8A8A;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Gemini Live&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Software System]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;May&amp;#39;s voice + brain&amp;lt;br/&amp;gt;STT + LLM + TTS one socket&amp;lt;br/&amp;gt;Fresh context per stage (R-SE-3)&lt;/div&gt;" id="12">
+          <mxCell parent="1" style="rounded=1;absoluteArcSize=1;arcSize=24;whiteSpace=wrap;html=1;fillColor=#999999;strokeColor=#8A8A8A;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="87" width="216" x="150" y="457" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Object Storage&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Cloudflare R2]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Session audio · before/after&lt;br&gt;clips&lt;/div&gt;" mermaidId="n:storage" mermaidBaseStyle="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15.84;spacingTop=13;fillColor=#B3B3B3;strokeColor=#8A8A8A;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" mermaidBaseValue="&lt;div style=&quot;font-size:14px;font-weight:bold;line-height:1.07;white-space:nowrap;&quot;&gt;Object Storage&lt;/div&gt;&lt;div style=&quot;font-size:10.5px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;[Container: Cloudflare R2]&lt;/div&gt;&lt;div style=&quot;font-size:11.48px;margin-top:3px;line-height:1.07;white-space:nowrap;&quot;&gt;Session audio · before/after&lt;br&gt;clips&lt;/div&gt;" id="13">
+          <mxCell parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15.84;spacingTop=13;fillColor=#B3B3B3;strokeColor=#8A8A8A;strokeWidth=1;fontColor=#FFFFFF;align=center;verticalAlign=middle;fontFamily=Open Sans,sans-serif;" vertex="1">
+            <mxGeometry height="127" width="216" x="466" y="457" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;① signup + 5 questions&lt;br&gt;&lt;i&gt;[HTTPS]&lt;/i&gt;&lt;/div&gt;" mermaidId="e:learner-&gt;frontend#0" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5625900316911554;exitY=1;entryX=0.5240588167982607;entryY=0;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;① signup + 5 questions&lt;br&gt;&lt;i&gt;[HTTPS]&lt;/i&gt;&lt;/div&gt;" id="14">
+          <mxCell edge="1" parent="1" source="3" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5625900316911554;exitY=1;entryX=0.5240588167982607;entryY=0;align=center;verticalAlign=middle;" target="8">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="63" y="8.5" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;② ⑤ live voice&lt;br&gt;&lt;i&gt;[WSS]&lt;/i&gt;&lt;/div&gt;" mermaidId="e:learner-&gt;backend#1" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.6877700950734659;exitY=1;entryX=0.39297974596635754;entryY=0;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;② ⑤ live voice&lt;br&gt;&lt;i&gt;[WSS]&lt;/i&gt;&lt;/div&gt;" id="15">
+          <mxCell edge="1" parent="1" source="3" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.6877700950734659;exitY=1;entryX=0.39297974596635754;entryY=0;align=center;verticalAlign=middle;" target="9">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="115.58132114821615" y="8.5" as="offset" />
+              <Array as="points">
+                <mxPoint x="374" y="575" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;⑤ voice + item log (D-011)&lt;br&gt;&lt;i&gt;[WSS]&lt;/i&gt;&lt;/div&gt;" mermaidId="e:backend-&gt;gemini#2" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.3223646723646725;exitY=0;entryX=0.7515371102327625;entryY=1;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;⑤ voice + item log (D-011)&lt;br&gt;&lt;i&gt;[WSS]&lt;/i&gt;&lt;/div&gt;" id="16">
+          <mxCell edge="1" parent="1" source="9" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.3223646723646725;exitY=0;entryX=0.7515371102327625;entryY=1;align=center;verticalAlign=middle;" target="12">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="2.6753116448768566" y="8.5" as="offset" />
+              <Array as="points">
+                <mxPoint x="517" y="669" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;reads / writes&lt;/div&gt;" mermaidId="e:backend-&gt;db#3" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.3363715277777778;exitY=1;entryX=1;entryY=0.2351312551271535;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;reads / writes&lt;/div&gt;" id="17">
+          <mxCell edge="1" parent="1" source="9" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.3363715277777778;exitY=1;entryX=1;entryY=0.2351312551271535;align=center;verticalAlign=middle;" target="10">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="-7.6640625" as="offset" />
+              <Array as="points">
+                <mxPoint x="545" y="946" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;⑥ session audio upload&lt;/div&gt;" mermaidId="e:backend-&gt;storage#4" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5428644240570846;exitY=0;entryX=0.6223954521055972;entryY=1;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;⑥ session audio upload&lt;/div&gt;" id="18">
+          <mxCell edge="1" parent="1" source="9" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5428644240570846;exitY=0;entryX=0.6223954521055972;entryY=1;align=center;verticalAlign=middle;" target="13">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="55.794675514619684" as="offset" />
+              <Array as="points">
+                <mxPoint x="625" y="689" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;⑦ playback presigned M4A (R-PR-2)&lt;br&gt;&lt;i&gt;[HTTPS]&lt;/i&gt;&lt;/div&gt;" mermaidId="e:learner-&gt;storage#5" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.87015873015873;exitY=1;entryX=0.09098228663446063;entryY=0;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;⑦ playback presigned M4A (R-PR-2)&lt;br&gt;&lt;i&gt;[HTTPS]&lt;/i&gt;&lt;/div&gt;" id="19">
+          <mxCell edge="1" parent="1" source="3" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.87015873015873;exitY=1;entryX=0.09098228663446063;entryY=0;align=center;verticalAlign=middle;" target="13">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="135.42447204968946" y="8.5" as="offset" />
+              <Array as="points">
+                <mxPoint x="375" y="407" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;⑧ reminders&lt;/div&gt;" mermaidId="e:notifier-&gt;learner#6" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.42273853779429965;exitY=0;entryX=0.6419007184846506;entryY=1;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;⑧ reminders&lt;/div&gt;" id="20">
+          <mxCell edge="1" parent="1" source="11" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.42273853779429965;exitY=0;entryX=0.6419007184846506;entryY=1;align=center;verticalAlign=middle;" target="3">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="-45.16524224272105" as="offset" />
+              <Array as="points">
+                <mxPoint x="528" y="669" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;div style=&quot;text-align:left;&quot;&gt;③ activate · QA · author&lt;/div&gt;" mermaidId="e:founder-&gt;backend#7" mermaidBaseStyle="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5625900316911552;exitY=1;entryX=0.5240588167982604;entryY=0;align=center;verticalAlign=middle;" mermaidBaseValue="&lt;div style=&quot;text-align:left;&quot;&gt;③ activate · QA · author&lt;/div&gt;" id="21">
+          <mxCell edge="1" parent="1" source="5" style="endArrow=block;html=1;strokeColor=#444444;strokeWidth=1;curved=1;fontSize=12;fontColor=#444444;fontFamily=Open Sans,sans-serif;labelBackgroundColor=none;exitX=0.5625900316911552;exitY=1;entryX=0.5240588167982604;entryY=0;align=center;verticalAlign=middle;" target="9">
+            <mxGeometry relative="1" as="geometry">
+              <mxPoint x="73.91931439578369" as="offset" />
+              <Array as="points">
+                <mxPoint x="598" y="575" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

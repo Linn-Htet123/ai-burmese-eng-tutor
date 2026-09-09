@@ -476,3 +476,132 @@ Recordings are not deleted when course access expires at 8 weeks (D-029). Deleti
 **Why.** The before/after clip is the marketing asset, the retention tool, and the investor demo (vision doc); it gains value with time. Storage cost is trivial (~$0.015/GB-month; the whole first cohort is ~12 GB).
 
 **Would revisit if:** per-learner audio ever approaches ~1 GB, or a privacy/regulatory requirement forces a retention window.
+
+---
+
+## D-042: Subscription model — $25/month, daily 40-minute sessions
+**Date:** 2026-09-08 · **Status:** decided, supersedes the one-time 4-week-course packaging (D-024/D-029 framing, R-PY-2)
+
+The product is sold as a **monthly subscription at $25/month**. Each learner gets **up to one session per day, 40 minutes** (hard cap — no banking unused days into longer sessions).
+
+**Session rhythm alternates:** unit day (new authored material) → review day (review queue + free conversation on the learner's material) → unit day → … Review days are generated from the review queue, not authored, which stretches the authored pack across ~5–6 weeks and matches spaced-repetition mechanics.
+
+**First-month arc kept:** the first four weeks carry an explicit pack-shaped goal (see D-043) and end with the before/after clip at week 4. The clip's job changes from completion prize to **renewal moment** — the learner hears their own improvement right when month 2 billing is due.
+
+**The economics (from the BRD cost basis, ~$0.007–0.013/min):**
+| Usage | AI cost/month | Kept of $25 |
+|---|---|---|
+| Every day (whale) | $8.40–15.60 | $9.40–16.60 |
+| ~70% of days (realistic) | $5.90–10.90 | $14–19 |
+| 3 days/week (light) | $3.40–6.20 | $19–22 |
+
+**Why.** Founder call. Recurring revenue instead of a one-shot $35; 50 subscribers ≈ $1,250/month steady. Daily practice is also better pedagogy and finally makes the long spaced-review intervals real (the PRD itself flags the 4-week course as too short for retention — this was the argued case for a subscription all along).
+
+**Guardrails:** one-session-per-day cap protects margin and pedagogy. All cost figures re-check against real R-TE-8 token logs in week one; price or minutes adjust **before** launch if reality is worse.
+
+**Cost accepted:** no finish line (mitigated by the first-month arc + week-4 clip); monthly manual bank-transfer renewal and founder re-activation (payments doc must design this); the "different from every subscription app" positioning weakens; session shape stretches from 30 to 40 minutes (PRD section 6 stage times scale ~+33%).
+
+**Docs still to update for this:** BRD pricing + cost tables, PRD sections 6 (session shape) and 13 (payment/plans), marketing plan packaging. Tracked as an open task, not yet done.
+
+**Would revisit if:** week-one token logs put whale-cost above ~$16/month, or month-2 renewal proves materially worse than course completion did.
+
+---
+
+## D-043: Packs are a profession-based roadmap; interviews is only the MVP test pack
+**Date:** 2026-09-08 · **Status:** decided, widens D-003
+
+The interview pack is **pack #1, the MVP experiment** — not the product's identity. The engine (May + upgrade loop + daily practice) is profession-agnostic; packs are the topic skin. Roadmap direction: nurses/doctors (patients in English), street food & shop owners (serving foreign customers), delivery & drivers, teachers, engineers, office workers.
+
+**First-month goal is pack-shaped** ("handle a foreign patient confidently in 4 weeks", "serve a tourist start to finish"), replacing the interview-specific framing everywhere it appears.
+
+**Why.** Founder call. The upgrade-loop mechanic works on any profession's situations; profession packs multiply the addressable market without touching the engine. The greyed-out coming-soon pack list (R-TP-6) already measures which pack to author next — this decision gives that list its roadmap.
+
+**Tension flagged, accepted deliberately:** D-003 chose software/design/finance/teaching/students as the initial market. This roadmap adds blue-collar segments (street food, delivery) — bigger population, likely tighter budgets for $25/month. The pack-interest data from R-TP-6 decides the actual authoring order; no segment commitment is made here beyond pack #1.
+
+**Would revisit if:** pack-interest data shows demand concentrated in one profession — then depth in that pack beats breadth.
+
+---
+
+## D-044: Voice model reaffirmed — Gemini Live; GPT-6 Astra evaluated and parked
+**Date:** 2026-09-09 · **Status:** decided
+
+Researched on GPT-6 Astra's launch week (released 2026-09-03/04) at the founder's request.
+
+**Why Gemini Live stays, verified against primary sources:**
+1. **Burmese is officially supported** — Google's Live API capabilities page lists 97 audio-output languages including "Burmese `my`", with mid-conversation language switching. This is load-bearing: levels 0–3 are 60–90% Burmese instruction (R-LV-4), and May explains upgrades in Burmese at every level.
+2. **Astra is not a voice model.** Its documented capabilities are coding, math, computer/browser use; OpenAI's own audio API docs do not mention it. OpenAI's realtime voice line is the separate gpt-realtime family, which publishes no Burmese voice support (their translate model outputs 13 languages only).
+3. **Cost:** Astra at $10/M input, $50/M output is 3–4× Gemini Flash Live ($3/$12) — incompatible with the D-042 subscription margin.
+
+**Parked, not rejected forever:** Astra (or similar frontier text models) remains a candidate for slow-brain jobs (planner, level judge, QA analysis) post-MVP if plan quality on cheaper models disappoints. Not MVP: second vendor for an unproven quality gain.
+
+**Fallback if Gemini's spoken Burmese disappoints in the week-one spike:** compare against gpt-realtime-2 — never Astra.
+
+**Caveat recorded:** OpenAI's Astra page itself was unreachable during research (403); conclusion rests on their audio docs omitting Astra and launch coverage. Re-verify if OpenAI announces Astra audio modalities.
+
+---
+
+## D-045: Voice plumbing — Pipecat adopted
+**Date:** 2026-09-09 (revised same day: trial → adopted, founder call after comparing LiveKit Agents, Google's `google-genai` SDK, and TEN Framework) · **Status:** decided
+
+The voice-moving layer (browser audio ↔ Gemini Live) is built on **Pipecat** (open-source Python voice-agent framework, BSD, ~13k stars, maintained by Daily). Pipecat ships a `GeminiLiveLLMService`, a FastAPI WebSocket transport, VAD, and interruption handling — most of the plumbing 02-voice-pipeline planned to hand-write.
+
+**Alternatives compared (researched 2026-09-09, including issue trackers):** LiveKit Agents (best interruption reputation, but drags in WebRTC media-server infra rejected in D-036, and has a known 6–12s first-turn latency bug with Gemini Flash Live); Google's `google-genai` SDK directly (first-party, perfect stack fit, but most hand-assembly — kept as the documented fallback); TEN Framework (smallest community, most configuration — wrong bet for a solo founder).
+
+**Week-one verification (adoption is decided; these verify it in practice):**
+1. **Barge-in:** May stops within **300ms** of learner speech (R-SE-8 / R-TE-2). Known risk: pipecat-ai/pipecat issue #3381 — the Gemini service historically used the slow transcription signal for interruptions (1–2s delay) instead of Gemini's instant `interrupted` signal. Check if fixed in the current release; if not, patch it ourselves (the fix path is documented in the issue).
+2. **Latency:** end-of-speech → May's first audio under **1s** (R-TE-1) on a real Myanmar-style mobile connection.
+
+**Documented fallback if Pipecat proves unfixable on either number:** Google's official `google-genai` SDK on asyncio (their examples cover exactly this use case). Our stage conductor logic is written as our own code either way — with Pipecat it lives as custom pipeline processors; on the fallback it sits directly on asyncio. The conductor survives a swap.
+
+**If adopted:** pin the exact Pipecat version; upgrades are deliberate events with the eval suite run before and after — the project has a documented history of breaking changes and interrupt/resume bug classes (queue recreation, deadlock, frame-drop, race conditions).
+
+**Why trial anyway, despite the known warts:** the Gemini Live wiring, VAD, and transport come free — the spike gets built in days, not weeks, and the two exit tests are cheap to measure. The research (2026-09-09) that surfaced both the value and the warts is what shaped the criteria.
+
+**Relation to D-038's "no framework in the hot path":** that rule targeted general LLM frameworks (LangChain-style) wrapping the socket. Pipecat is a hot-path-native voice framework built for latency; the rule's spirit — nothing between the learner and Gemini that adds silent delay — is exactly what the exit criteria enforce.
+
+**Would revisit if:** Pipecat passes the spike but later releases regress latency or interruption behaviour — the raw-asyncio fallback remains documented in 02-voice-pipeline.
+
+---
+
+## D-046: Stage cutover — fresh Gemini context per stage, handover notes, cached cover lines
+**Date:** 2026-09-09 · **Status:** decided
+
+Each of a session's stages runs in its own fresh Gemini Live context (implements R-SE-3 / R-TE-4). The 1–2s reconnect gap is masked by a pre-recorded May transition line (cached TTS, zero marginal cost). Every new stage context opens with two handover notes: the **long-term chart** (level, pack, weak points, recap items, profile — from Postgres) and the **short-term handover** (what happened earlier this session, built live by the conductor). Stage time budgets are soft — May is never cut off mid-sentence; the conductor sends a wrap-up-when-natural instruction near budget end.
+
+**Why.** One accumulated 40-minute context re-bills the growing history every turn (the BRD's named cost leak) and drifts in quality. Fresh contexts with compact summaries are both the cost model and the quality model — and the handover notes are exactly the "compact state summary passed forward" R-SE-3 names, so May never appears to forget.
+
+**Rejected:** one 40-minute context (cost leak, violates R-SE-3); one context with "forget previous stage" instructions (still accumulates cost; forget-instructions unreliable); hard per-minute stage cuts (robotic, breaks the persona).
+
+**Cost accepted:** ~10 authored + recorded transition lines per session type, and cutover logic in the conductor.
+
+Design: `docs/technical-designs/04-session-engine.md`.
+
+---
+
+## D-047: Quality guard — watch and nudge, with a weekly prompt loop and eval suite
+**Date:** 2026-09-09 · **Status:** decided
+
+May's per-turn item log (D-011) is scored by plain code against the R-UL rules as each report arrives — never in the audio path, so zero latency. Two reaction lanes: **flags** to a weekly founder QA list (invented upgrades additionally blocked from the review queue until approved, per R-UL-9), and rare **nudges** — one corrective text instruction into May's live context when drift damages the lesson (missed repeat, stage far over budget). Improvement loop: flags → rewrite the weak prompt sentence → run the eval suite (~20 saved test conversations, grown from real flagged sessions) → ship. Prompt changes never ship without the suite passing. Flag-rate per 100 turns is the tracked teaching-quality metric.
+
+**Why.** R-UL-1 demands 100% rule compliance; prompts alone deliver ~95% silently. Checking each turn *before* the learner hears it would add ~1s and destroy R-TE-1. Watching the already-existing reports costs nothing and makes every violation visible.
+
+**Rejected:** prompt-only trust (silent failures reach paying adults); hard-gating every turn (kills the latency budget).
+
+**Known limit, accepted:** the item log is self-reported by the model — mitigated by weekly founder spot-checks of transcripts against reports.
+
+**Would revisit if:** flag rates stay high after several prompt iterations — then selective hard-gating of the worst stage type gets reconsidered despite the latency cost.
+
+---
+
+## D-048: Session engine tool split — LangGraph thinks, our Python conducts, Pipecat carries audio
+**Date:** 2026-09-09 · **Status:** decided
+
+- **Planner, post-session processor, level judge** → LangGraph graphs (step-shaped LLM workflows; checkpointing prevents half-done bookkeeping, retries handle bad LLM outputs, traces make debugging visible).
+- **Live conductor** (stage switching, soft timers, handover building, nudge delivery, pause/resume) → our own Python, registered as custom Pipecat processors (D-045).
+- Judgment stays code where rules are exact: level promotion/demotion (R-LV-8/9/10) and item grading are pure logic; LLM calls only where language is produced.
+
+**Why.** The conductor is continuous and event-driven — many simultaneous concerns, no step shape — so a graph framework adds ceremony without its gifts; the three thinking jobs are exactly step-shaped and get resume/retry/tracing free. Discussed across six topics with the founder, 2026-09-09.
+
+**Rejected:** LangGraph everywhere (wrong shape for the conductor); LangGraph nowhere (~a week of hand-built plumbing for the thinking jobs, and the founder wants the LangGraph skill).
+
+Design: `docs/technical-designs/04-session-engine.md`.
