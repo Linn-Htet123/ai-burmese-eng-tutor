@@ -54,7 +54,7 @@ Learner says a sentence, May confirms what worked and gives the smoother native 
 ---
 
 ## D-005: Four-week course, not an open-ended subscription
-**Date:** 2026-09-04 · **Status:** decided, and the biggest untested bet in the plan
+**Date:** 2026-09-04 · **Status:** ~~decided~~ **superseded by D-042 (2026-09-08)** — pivoted to a monthly subscription with a pack-shaped first-month arc
 
 Twelve live sessions over four weeks, tied to a real deadline.
 
@@ -64,16 +64,20 @@ Twelve live sessions over four weeks, tied to a real deadline.
 
 **Would revisit if:** completion rates come back low anyway, which would mean the deadline is not doing the work.
 
+**Superseded by D-042.** The subscription-first framing that D-005 explicitly rejected is now the model. D-042 preserves the four-week deadline flavour via the first-month pack arc (D-043) and the week-4 before/after clip as renewal moment, but revenue is monthly, not one-off.
+
 ---
 
 ## D-006: Optional monthly subscription after the course
-**Date:** 2026-09-04 · **Status:** decided, build second
+**Date:** 2026-09-04 · **Status:** ~~decided, build second~~ **superseded by D-042 (2026-09-08)** — subscription is the whole product, not a post-course option
 
 Course acquires, subscription retains.
 
 **Why.** Captures the people who want to keep going without imposing open-endedness on everyone. Also gives the spaced-review intervals beyond three weeks somewhere to live, which a four-week course cannot.
 
 **Sequencing:** course first. Do not build subscription mechanics until completion is proven.
+
+**Superseded by D-042.** The subscription mechanic is now built first, not second — it is the product, not a follow-on. The "spaced-review beyond three weeks needs somewhere to live" argument was correct and is what makes D-042 pedagogically better than a fixed four-week course.
 
 ---
 
@@ -137,11 +141,13 @@ Ask ten Burmese adults what they **currently spend** on English, not what they w
 ---
 
 ## D-012: 30-minute sessions, three per week
-**Date:** 2026-09-05 · **Status:** decided
+**Date:** 2026-09-05 · **Status:** ~~decided~~ **superseded by D-042 (2026-09-08)** — 40 minutes, up to daily (with hard one-per-day cap)
 
 **Why.** Shorter than the kids product's 40 minutes. Adults have jobs, and 30 minutes of hard speaking is more taxing than 40 minutes of guided reading. Three per week gives twelve sessions over four weeks, which is a clean course shape.
 
 **Rejected:** 40 minutes, carried over from kids. No mid-session break either, adults do not need one at 30 minutes.
+
+**Superseded by D-042.** Session length went back to 40 minutes (the D-042 "hard speaking ceiling" argument overturned this decision's "taxing" argument). Cadence went from three per week to daily-with-cap. The clean-course-shape reasoning was tied to D-005 (also superseded).
 
 ---
 
@@ -479,6 +485,19 @@ Recordings are not deleted when course access expires at 8 weeks (D-029). Deleti
 
 ---
 
+## D-041: Remaining stack picks — Railway Postgres, SQLAlchemy + Alembic, Sentry + PostHog, Tailwind + shadcn/ui
+**Date:** 2026-09-07 (logged on doc approval 2026-09-09) · **Status:** decided
+
+The stack manifest's remaining choices, completing D-035–D-038:
+- **PostgreSQL on Railway** — same platform as the services, private network to the backend, ~$5/month. Rejected: Neon/Supabase (extra vendor, public-internet DB traffic; Neon stays the fallback).
+- **SQLAlchemy 2.0 + Alembic** — the Python standard; migrations only, never auto-push. Rejected: SQLModel (smaller community), raw SQL (slow to build).
+- **Sentry + PostHog**, both free tiers — errors plus the landing→signup→placement→paid funnel, measured from learner #1. Rejected: analytics-later (the onboarding funnel is the riskiest flow).
+- **Tailwind + shadcn/ui** — owned components, light enough for mid-range phones.
+
+Full manifest, third-party blast-radius table, and deliberate non-picks (no auth vendor, no Redis, no queues, no staging): `docs/technical-designs/01-architecture-and-stack.md`.
+
+---
+
 ## D-042: Subscription model — $25/month, daily 40-minute sessions
 **Date:** 2026-09-08 · **Status:** decided, supersedes the one-time 4-week-course packaging (D-024/D-029 framing, R-PY-2)
 
@@ -605,3 +624,18 @@ May's per-turn item log (D-011) is scored by plain code against the R-UL rules a
 **Rejected:** LangGraph everywhere (wrong shape for the conductor); LangGraph nowhere (~a week of hand-built plumbing for the thinking jobs, and the founder wants the LangGraph skill).
 
 Design: `docs/technical-designs/04-session-engine.md`.
+
+---
+
+## D-049: Data model — UUIDs everywhere, append-only item-log events, plans as JSONB
+**Date:** 2026-09-10 · **Status:** decided
+
+Three structural choices for the single Railway Postgres database (17 tables, full schema in the design doc):
+
+1. **UUID primary keys on every table.** Session and recording IDs are exposed in URLs; guessable integers would undercut R-TE-10's access posture. Rejected: auto-increment (guessable), mixed scheme (two conventions for no gain at this scale).
+2. **`item_log_events` is append-only and the source of truth.** Every per-turn report from May (D-011) is stored exactly as emitted, never updated or deleted; review items, metrics, and recaps are derived from it. A processor bug is healed by re-running the derivation over raw events — learning history can never be silently corrupted. Rejected: process-and-discard (a bug destroys the product's core asset with no way back).
+3. **Session plans as one JSONB document per row.** Written once by the planner, read once by the conductor, never queried inside; cross-plan questions are answered by the events (what happened), not plans (what was intended). No migration cost while the plan shape evolves weekly. Rejected: normalized plan_stages/plan_items tables (structure enforcement the planner's validate step already provides, at constant migration cost).
+
+**The working rule, recorded for future tables:** *normalize what you query, JSON what you pass around.*
+
+Design: `docs/technical-designs/05-data-model.md` (+ ER diagram `diagrams/05-data-model.drawio`).

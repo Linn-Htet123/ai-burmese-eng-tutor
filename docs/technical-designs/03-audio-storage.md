@@ -2,7 +2,7 @@
 
 **Status:** Approved (2026-09-07)
 **Author:** Larry (Thar Linn Htet)
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-10 (updated storage math for D-042 session shape)
 
 ## Requirements this implements
 - `R-ON-7` — placement session audio is recorded and retained. Non-negotiable: without it there is no before-and-after clip
@@ -14,9 +14,9 @@
 ## Related decisions
 - `D-035` — voice traffic is proxied through our backend. This is what makes server-side capture free: the audio already flows through us.
 - `D-037` — hosting on Railway; audio storage is Cloudflare R2 (this doc details that consequence). Earlier Vercel Blob pick died with the Vercel hosting plan.
-- `D-029` — course access expires at 8 weeks. Recordings are NOT deleted at expiry — they are the marketing asset (see retention).
 - `D-039` — this doc's capture/storage architecture, as logged.
-- `D-040` — recordings kept indefinitely, deletion only on learner request.
+- `D-040` — recordings kept indefinitely, deletion only on learner request. Governs retention.
+- `D-042` — 40-minute sessions, up to one per day (subscription model). Sets storage math baseline.
 
 ## Context
 
@@ -68,11 +68,16 @@ r2://recordings/{learner_id}/{session_id}/may.ogg       (source of truth)
 r2://recordings/{learner_id}/{session_id}/session.m4a   (derived, playback)
 ```
 
-50 learners × 13 sessions × ~18 MB (all three files) ≈ **12 GB ≈ $0.18/month**. Cost is a non-issue at any MVP multiple.
+Per D-042: 40-minute sessions × up to one per day. Roughly 21 sessions/learner/month at realistic usage (~70% of days), ~30 at whale usage. At ~24 MB per session (all three files, scaled from 30-min baseline):
+
+- **Realistic:** 50 learners × 21 sessions × ~24 MB ≈ **25 GB ≈ $0.38/month**
+- **Whale case:** 50 learners × 30 sessions × ~24 MB ≈ **36 GB ≈ $0.54/month**
+
+Cost is a non-issue at any MVP multiple.
 
 ### Retention
 
-Keep indefinitely. Recordings outlive the 8-week course access (D-029) because they are the before/after marketing asset and the learner's own record. Deletion only on learner request (and then actually delete, all three files plus the DB row).
+Keep indefinitely (D-040). Under D-042 there is no course expiry — the subscription runs monthly and recordings are retained regardless of subscription state. Recordings are the before/after marketing asset and the learner's own record. Deletion only on learner request (and then actually delete, all three files plus the DB row).
 
 ## Alternatives considered
 

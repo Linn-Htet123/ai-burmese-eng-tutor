@@ -80,8 +80,8 @@ Browser-based AI speaking teacher — notable as the rare **web-first** product 
 
 1. **Burmese-first scaffolding that changes with level** (R-LV-4: the instruction-language ratio shifts as the learner improves). No global app does L1-ratio pedagogy for Burmese.
 2. **The upgrade loop with forced say-it-back** (D-004). Apps *correct* learners; none make the learner *use* the better phrase before the session ends.
-3. **A course that ends** — 12 sessions, 4 weeks, deadline pressure (the completion bet, O-5) versus everyone's infinite subscription.
-4. **Before/after voice proof** (R-PR-2). Nobody records session 1 to play against session 12.
+3. **A pack-shaped first month inside a subscription** (D-042 + D-043) — daily 40-min practice with a week-4 before/after clip as the completion milestone. Every competitor is either a pure infinite subscription (no completion moment) or a one-off course (no daily habit). We are the only product that gets *both* the deadline psychology and the daily habit.
+4. **Before/after voice proof** (R-PR-2). Nobody records day 1 to play against the week-4 clip.
 5. **Payment without an international card** (R-PY-1). Every global app dies at the Myanmar checkout — this alone removes them from our market.
 
 ## Watch closely

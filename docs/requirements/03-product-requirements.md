@@ -176,18 +176,29 @@ Landing page (Burmese)
 
 ### 6.1 Shape
 
-30 minutes. No mid-session break. Stage composition is set by level per section 3.1. Below is the level 4 to 6 sequence as a reference; variations for other bands are described after the table. All 11 level bands ship in MVP (see R-LV-7).
+**40 minutes. Sessions alternate unit day → review day → unit day → ...** per D-042. Unit days introduce new authored material; review days are drawn from the review queue plus free conversation on the learner's own material — no new authored unit. No mid-session break. Stage composition is set by level per section 3.1. Below is the level 4 to 6 reference; variations for other bands described after each table. All 11 level bands ship in MVP (see R-LV-7).
+
+**Unit day** — introduces new authored material.
 
 | # | Stage | Time | What happens |
 |---|---|---|---|
 | 0 | Greeting | 1 min | Fixed shape, varied wording. Small talk in English. Itself practice, and it warms up the voice |
-| 1 | Review | 4 min | Items due from spaced review, plus the three recap items from last session, unconditionally |
-| 2 | Situation brief | 3 min | In Burmese. What this situation is, what the other person wants, what a good answer sounds like. **Situation before language** |
-| 3 | Drills | 5 min | Two-direction translation. Burmese-to-English weighted about 2:1 |
-| 4 | Core practice | 12 min | Upgrade loop on the learner's real material |
-| 5 | Recap | 5 min | Three things that held you back. See section 9 |
+| 1 | Review | 5 min | Items due from spaced review, plus the three recap items from last session, unconditionally |
+| 2 | Situation brief | 4 min | In Burmese. What this situation is, what the other person wants, what a good answer sounds like. **Situation before language** |
+| 3 | Drills | 7 min | Two-direction translation. Burmese-to-English weighted about 2:1 |
+| 4 | Core practice | 16 min | Upgrade loop on the learner's real material |
+| 5 | Recap | 7 min | Three things that held you back. See section 9 |
 
-At levels 0 to 3, stage 3 expands and stage 4 shrinks, and an explicit grammar stage is inserted before drills. At levels 7 to 10, stages 2 and 3 nearly disappear and stage 4 takes 20 minutes.
+At levels 0 to 3, stage 3 expands and stage 4 shrinks, and an explicit grammar stage is inserted before drills. At levels 7 to 10, stages 2 and 3 nearly disappear and stage 4 takes 26 minutes.
+
+**Review day** — no new authored unit. Review queue is the main course; the rest is free conversation on the learner's own topics.
+
+| # | Stage | Time | What happens |
+|---|---|---|---|
+| 0 | Greeting | 1 min | Same as unit day |
+| 1 | Review | 12 min | Full review queue for the day. This is the day's main course |
+| 2 | Free conversation | 20 min | Upgrade loop on the learner's real topics — no assigned situation. Any unfinished target phrases from prior unit days surface here |
+| 3 | Recap | 7 min | Same three-things format as unit day |
 
 ### 6.2 Requirements
 
@@ -327,7 +338,7 @@ The distinction driving the design: **massed repetition within a session builds 
 | R-RV-7 | The review queue is cleared before new material is introduced | |
 | R-RV-8 | Items are marked fluent, hesitant, or failed, based on delivery not just correctness | Hesitant is a distinct state and it is the one that matters most for this product |
 
-⚠️ **Structural limitation, stated plainly.** In a four-week course the 3-week interval fires roughly once and anything longer never fires. Real acquisition needs those long intervals. This is the strongest argument for the post-course subscription, and it should be said to learners honestly rather than hidden.
+⚠️ **The pedagogical case for daily subscription.** On any short timeline (say a compressed four-week block) the 3-week interval fires roughly once and anything longer never fires. Real acquisition needs those long intervals to actually fire. This is one of the strongest arguments for the daily subscription model (D-042) — and it should be said to learners honestly rather than hidden.
 
 ### 9.3 Progress and the proof asset
 
@@ -411,34 +422,44 @@ Burmese-language, and deliberately minimal.
 
 | ID | Requirement | Acceptance criteria |
 |---|---|---|
-| R-PY-1 | Product sold as a four-week course: 12 sessions, one goal pack, one level track | |
-| R-PY-2 | Sold as **"12 live speaking sessions"**, never as "a 4-week course" | Packaging decision. Compares against tutoring, which is the honest comparison, rather than against recorded video |
-| R-PY-3 | Post-course monthly subscription, 2 sessions per week | V2. Do not build the mechanics until completion rates are known |
-| R-PY-4 | One price, one product. No tiers at launch | |
-| R-PY-5 | Refund if a learner completes all 12 sessions and is not satisfied | Cheap, because almost nobody who finishes asks, and it removes the main objection from a buyer who has been let down by courses before |
-| R-PY-6 | Soft cap: 4 sessions per week on the course plan, 3 per week on the subscription | The release valve for R-PL-2's unpredictable spend. Framed as pacing advice, not a limit, until it is actually hit |
-| R-PY-7 | Course access expires 8 weeks after purchase, not 4 | Real life interferes. A hard 4-week expiry generates refund requests and resentment |
+| R-PY-1 | Product sold as a **monthly subscription at $25/month**, auto-renewing (D-042) | Manual renewal outreach for MVP — see 13.2 |
+| R-PY-2 | Each learner gets **one session per day, 40 minutes**. Hard cap — no banking unused days into longer sessions or extra daily sessions | Session start blocked if today's session is already completed |
+| R-PY-3 | Session rhythm alternates **unit day → review day → unit day → ...** Review days generated from the review queue, not authored (D-042) | Plan-preview screen shows today's day type before start |
+| R-PY-4 | **First month is pack-shaped:** an explicit outcome goal (e.g. "handle a foreign patient confidently in 4 weeks"), ending with the week-4 before/after clip as the renewal moment (D-042, D-043) | Landing page and onboarding surface the pack goal, not "a subscription" |
+| R-PY-5 | One price, one product. No tiers at launch | |
+| R-PY-6 | Refund policy for the first billing cycle | ⚠️ Policy shape TBD — see O-10 in §19 |
+| R-PY-7 | Cost re-check against real R-TE-8 token logs in week one. Price or minutes adjust **before** launch if reality is worse than D-042's cost table | Documented decision either way before subscription flips on |
 
 ### 13.1 Price
 
-⚠️ **Still undecided. This blocks the landing page and all marketing.**
+**$25/month, auto-renewing (D-042).**
 
-Known: cost is 2.61 to 4.78 dollars per learner per 12-session course, so every price from 10 dollars up yields a healthy margin. **Price is a demand question, not a cost question.** Working estimate 10 to 15 dollars for the course, 8 dollars per month after. Held loosely.
+Cost basis (BRD ~$0.007–0.013/min via Gemini Live):
 
-Resolution method: ask ten Burmese adults what they **currently spend** on English, not what they would pay. Stated willingness is fiction, existing spend is fact.
+| Usage | AI cost/month | Kept of $25 |
+|---|---|---|
+| Every day (whale) | $8.40–15.60 | $9.40–16.60 |
+| ~70% of days (realistic) | $5.90–10.90 | $14–19 |
+| 3 days/week (light) | $3.40–6.20 | $19–22 |
+
+The subscription beats one-shot on recurring revenue: 50 subscribers ≈ $1,250/month steady vs. a one-time $35 × 50 = $1,750 then zero. Daily practice is also better pedagogy and finally makes the long spaced-review intervals real (see 9.2).
+
+**Guardrails.** The one-session-per-day cap (R-PY-2) protects margin at the whale end. R-PY-7 requires re-check against real token logs in week one.
+
+**Would revisit if:** week-one token logs put whale-cost above ~$16/month, or month-2 renewal proves materially worse than course completion would have (D-042).
 
 ### 13.2 Payment rails
 
-⚠️ **Unsolved, and it has been open since the kids product. It blocks revenue entirely.**
+**Decision: manual bank transfer + manual activation for MVP (D-026, D-042).** Automate only once there is revenue worth automating.
 
-| Option | Reach | Problem |
+| Option | Reach | Status |
 |---|---|---|
-| Stripe or Paddle, cards | Diaspora and Thailand only | Most Myanmar learners have no international card |
-| KBZPay, Wave Money | Myanmar mass market | Integration difficulty and business-entity requirements unverified |
-| Thai rails, PromptPay | Thailand-based Burmese | Good fit for what may be the real beachhead |
-| Manual bank transfer plus manual activation | Everyone | Ugly, does not scale, and it works. **Correct for the first 50 customers** |
+| Manual bank transfer + manual activation | Everyone | ✅ Picked for MVP — correct for the first 50 customers (D-026) |
+| Stripe or Paddle, cards | Diaspora and Thailand only | Deferred — most Myanmar learners have no international card |
+| KBZPay, Wave Money | Myanmar mass market | Deferred — integration difficulty and business-entity requirements unverified |
+| Thai rails, PromptPay | Thailand-based Burmese | Deferred — good fit for what may be the real beachhead if diaspora dominates |
 
-**Recommendation: launch on manual transfer plus manual activation.** It is embarrassing and it is the fastest path to revenue. Automate only once there is revenue worth automating.
+Founder handles monthly renewal outreach until an automated rail lands (D-042 accepts this cost).
 
 ---
 
@@ -552,12 +573,13 @@ Secondary, in order: does the before-and-after clip sound different to a neutral
 
 | # | Question | Blocks | Owner |
 |---|---|---|---|
-| O-1 | Course price | Landing page, all marketing | Ten interviews |
+| O-1 | ~~Course price~~ **Resolved by D-042: $25/month subscription** | ~~Landing page, all marketing~~ | ~~Ten interviews~~ |
 | O-2 | Distribution: how an adult finds this | Everything post-launch | Undiscussed. Most dangerous open item |
 | O-3 | Payment rails beyond manual transfer | Scaling revenue | Open since the kids product |
 | O-4 | Myanmar or Thailand as the beachhead | Pricing, channel, payment | |
 | O-5 | Whether automatic placement from conversation is reliable | Scaling onboarding | 50 manual placements first |
 | O-6 | Viber and Messenger business messaging feasibility | Notification channel | Verify before promising |
 | O-7 | Authoring hours for 12 units | Launch date | Estimate this week |
-| O-8 | Does the deadline actually produce completion | The core bet | Cohort 1 |
+| O-8 | Does the pack-shaped first month produce month-2 renewal (see D-042) | The core bet | Cohort 1 |
 | O-9 | **Product name.** May is the tutor character. The product is unnamed | Landing page, all marketing copy, domain | |
+| O-10 | Refund policy for the first billing cycle (R-PY-6) | Billing terms, T&Cs, first paid signup | Founder call |

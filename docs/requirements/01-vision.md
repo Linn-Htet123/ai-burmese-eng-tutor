@@ -4,8 +4,8 @@
 > **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
-**Version 1, 2026-09-05**
-**Status: draft, pricing unresolved**
+**Version 1.1, 2026-09-10** (subscription pivot per D-042)
+**Status:** draft
 
 Supersedes the kids product as the primary direction. The kids documents in `/kids-reference/` remain valid and are not abandoned, only deprioritised.
 
@@ -34,7 +34,7 @@ A second, related problem: **situations without a script.** A first job intervie
 
 ## What we are building
 
-A voice tutoring product for spoken English, built around a tutor character called **May**, that upgrades the way you already speak inside a four-week course tied to a real deadline.
+A voice tutoring product for spoken English, built around a tutor character called **May**, that upgrades the way you already speak through **daily 40-minute practice on a monthly subscription**. The first month has a pack-shaped arc (interview-ready in 4 weeks) that ends with a before/after clip — the retention moment (D-042, D-043).
 
 Open a page, press one button, and you are in a live spoken lesson with a tutor who already knows your level, your goal, and what you got wrong last time. No booking, no waiting, no scheduling.
 
@@ -50,13 +50,13 @@ Not correction. **Upgrading.** The difference is the entire product positioning.
 
 The learner repeating the better version aloud is not optional politeness. It is the mechanism. Hearing a better sentence changes nothing. Saying it is what lays down the retrieval path.
 
-### 2. A course with a deadline, not a subscription
+### 2. Daily practice with a pack-shaped first month
 
-Twelve live sessions over four weeks, aimed at job interviews.
+A monthly subscription at $25/month, one 40-minute session per day cap (D-042). But marketing surfaces the **pack** — the first-month arc, interview-ready in 4 weeks — because "daily English practice" is generic and "interview-ready in 4 weeks" is not.
 
-Adults quit things that run forever and finish things that end. A subscription with no endpoint has no moment where quitting feels like failure, so people quit in week three, every time. A course tied to a real event they already care about has a built-in reason to finish.
+Adults quit things that run forever and finish things that end. A pure subscription with no endpoint has no moment where quitting feels like failure. The **pack-shaped first month** carries the same commitment psychology as a course: a real event, a specific outcome, a week-4 before/after clip that says "you did it" — and only *then* does the subscription mechanic take over to keep the daily habit going into month 2 (D-042, D-043).
 
-Interviews specifically, because the deadline is real, money is attached, people already spend money on interview preparation, and it is the easiest thing to write an advertisement for.
+Interviews specifically, because the deadline is real, money is attached, people already spend money on interview preparation, and it is the easiest thing to write an advertisement for. Interviews is only pack #1 (D-043); profession packs — nurses, drivers, shop owners, teachers — are the roadmap that turns month-1 completion into month-6 retention.
 
 ### 3. It teaches the situation, not only the language
 
@@ -80,7 +80,7 @@ Packs are expensive to build. Interests are nearly free. That split is what make
 
 Job interview preparation for Burmese adults who already speak some English.
 
-Narrow on purpose. One situation, one four-week arc, one clear buying trigger. Everything else, standups, client calls, presentations, negotiations, general fluency, is a later pack built on the same engine.
+Narrow on purpose. One profession, one first-month pack arc, one clear buying trigger. Everything else — standups, client calls, presentations, negotiations, general fluency, and other professions (nurses, drivers, shop owners, teachers, per D-043) — is a later pack built on the same engine, unlocked as monthly subscribers stay past month 1.
 
 The wedge is chosen for sellability, not for size. It is the easiest version of this product to explain in one sentence to a stranger on Facebook.
 
@@ -88,11 +88,11 @@ The wedge is chosen for sellability, not for size. It is the easiest version of 
 
 ## What success looks like
 
-**Twelve months.** Several hundred people have finished the course. A meaningful share of them converted to the ongoing subscription. There is a library of before and after clips, in learners' own voices, that sells the product better than any copy. The situation packs beyond interviews exist.
+**Twelve months.** Several hundred people have completed the first-month pack arc. A meaningful share have kept renewing month-over-month. There is a library of before and after clips, in learners' own voices, that sells the product better than any copy. Profession packs beyond interviews (D-043) exist.
 
 **The proof that matters.** A learner's week-one recording next to their week-four recording. Same person, same question, visibly and audibly smoother. That single artefact is the marketing, the retention tool, and the investor demo.
 
-**The honest version.** This becomes a real business when adults finish and tell other adults. If the completion rate is low, none of the rest of it matters, and the deadline-driven format is the untested bet the whole thing rests on.
+**The honest version.** This becomes a real business when adults renew and tell other adults. If month-1 pack completion is low, none of the rest matters — and if completion is high but month-2 renewal is low, the subscription model is wrong. Both are the untested bets the whole thing rests on (D-042).
 
 ---
 
@@ -109,9 +109,9 @@ The wedge is chosen for sellability, not for size. It is the easiest version of 
 
 ## Open questions
 
-1. **Price.** Unresolved. See `02-business-requirements.md` section 4. Blocking.
+1. ~~**Price.** Unresolved. Blocking.~~ **Resolved by D-042: $25/month.** See `02-business-requirements.md` section 4.
 2. **Distribution.** How does a Burmese adult preparing for an interview find this. Barely discussed. Blocking, and probably more dangerous than price.
-3. **Completion rate.** The core bet is that a deadline produces finishing. Untested.
+3. **Month-1 completion + month-2 renewal (D-042).** The core bet is that a pack-shaped first month produces both completion (via the week-4 clip milestone) and renewal (via the daily-habit + profession-pack roadmap). Both untested.
 4. **Payment rails.** Same unsolved problem as the kids product, minus the parent layer.
 5. **The product name.** May is settled as the tutor character. The product still needs its own name, and it blocks the landing page and every piece of marketing copy.
 6. **Whether automatic level placement from a spoken conversation is reliable.** First cohort is placed by hand.

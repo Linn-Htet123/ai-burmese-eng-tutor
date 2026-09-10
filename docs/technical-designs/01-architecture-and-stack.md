@@ -1,8 +1,9 @@
 # Architecture overview and stack manifest
 
-**Status:** Draft
+**Status:** Approved (2026-09-09)
 **Author:** Larry (Thar Linn Htet)
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-10 (cost figure + concurrency numbers aligned with D-042)
+**Diagram:** [source](diagrams/product-overview-architecture.drawio) · [preview](diagrams/product-overview-architecture.svg)
 
 ## Requirements this implements
 This doc is the map, not a feature. It carries the cross-cutting requirements every other design inherits:
@@ -19,7 +20,7 @@ This doc is the map, not a feature. It carries the cross-cutting requirements ev
 
 ## Context
 
-Scale reality: cohort 1 is ~50 learners, 3 sessions/week, peak ~5–10 concurrent voice sessions. Every choice below optimises for **one solo founder shipping fast at small scale** — boring, few vendors, one platform — while protecting the two hard product constraints: sub-1s voice latency and never losing a recording.
+Scale reality: cohort 1 is ~50 learners on the D-042 subscription (daily 40-minute sessions, ~70% attendance), peak ~10–15 concurrent voice sessions on Myanmar evenings. Every choice below optimises for **one solo founder shipping fast at small scale** — boring, few vendors, one platform — while protecting the two hard product constraints: sub-1s voice latency and never losing a recording.
 
 ## Decision — the shape
 
@@ -47,7 +48,8 @@ Two services, one platform, one region:
 | Frontend | **Next.js** (TypeScript) | Founder's strong side. Mobile-first. |
 | UI | **Tailwind CSS + shadcn/ui** | Owned components, light enough for mid-range phones |
 | Backend | **FastAPI** (Python 3.12+) | Holds the voice WebSocket; founder learning investment (D-038) |
-| Agent framework | **LangGraph** (Python) | Session-stage graph, plan generation, item-log processing. **Never in the audio hot path** |
+| Agent framework | **LangGraph** (Python) | Planner, post-session processor, level judge (D-048). **Never in the audio hot path** |
+| Voice plumbing | **Pipecat** | Browser audio ↔ Gemini Live: transport, VAD, interruptions (D-045). Version-pinned |
 | ORM / migrations | **SQLAlchemy 2.0 + Alembic** | Migrations only — the `db:migrate`, never `db:push` discipline |
 | Database | **PostgreSQL on Railway** | Same platform, private network to backend, ~$5/mo |
 | Object storage | **Cloudflare R2** | Audio recordings; zero egress (D-039) |
@@ -57,7 +59,7 @@ Two services, one platform, one region:
 ### Third-party services
 | Service | Used for | Cost at MVP | Failure blast radius |
 |---|---|---|---|
-| **Gemini Live** (Google) | STT + LLM + TTS, item log | ~$2.6/learner/course (BRD) | Sessions down → text review fallback (R-TE-9). Biggest lock-in (D-011 trick is Gemini-specific) |
+| **Gemini Live** (Google) | STT + LLM + TTS, item log | ~$6.15/learner/month realistic; ~$8.80 whale (BRD §3.3 / D-042) | Sessions down → text review fallback (R-TE-9). Biggest lock-in (D-011 trick is Gemini-specific) |
 | **Cloudflare R2** | Audio file storage | ~$0.20/mo | Playback down; capture buffers on disk, uploads retry |
 | **Sentry** | Error tracking, FE + BE | Free tier | None (observability only). Founder already uses it |
 | **PostHog** | Product analytics — the landing→signup→placement→paid funnel | Free tier | None (observability only) |
@@ -68,7 +70,7 @@ Two services, one platform, one region:
 |---|---|
 | Stripe / Paddle | D-026: manual bank transfer + founder activates by hand. International rails come post-MVP |
 | Auth provider (Clerk/Auth0/etc.) | R-ON-1 is phone/email + password — a few endpoints with hashed passwords. A vendor adds cost + complexity for less than it gives |
-| Redis / cache layer | Session state lives in the FastAPI process + Postgres. ~10 concurrent sessions doesn't need a cache |
+| Redis / cache layer | Session state lives in the FastAPI process + Postgres. ~10–15 concurrent sessions doesn't need a cache |
 | Queue (Celery/SQS/etc.) | Session-end jobs run in-process (asyncio background tasks). Revisit if transcode CPU hurts live sessions |
 | Vercel / CDN | D-037. Next.js on Railway serves ~50 users fine; add a CDN when static-asset latency measurably hurts |
 | Docker Compose locally | Both services run natively (`npm run dev`, `uvicorn`); Railway builds from the repo |
@@ -86,7 +88,7 @@ Viber / Messenger / SMS / email providers (R-NT-x) get their own design doc — 
 - **SQLModel** — simpler FastAPI-native ORM. Rejected: smaller community; SQLAlchemy is the durable skill and the ecosystem default.
 - **Auth vendor (Clerk/Auth0)** — faster start. Rejected: R-ON-1's phone+password flow is small, and per-user vendor pricing is wrong for a $30-ish course product.
 - **No analytics until later** — rejected: the onboarding funnel (R-ON) is the product's riskiest flow and must be measured from learner #1.
-- **Full microservices / queues / Redis** — rejected on scale reality: ~10 concurrent sessions. Add moving parts only when a measured bottleneck demands them.
+- **Full microservices / queues / Redis** — rejected on scale reality: ~10–15 concurrent sessions. Add moving parts only when a measured bottleneck demands them.
 
 ## Trade-offs
 - **Railway is a single point of failure** for app + DB. Accepted at MVP; the R2/Gemini dependencies fail independently.
@@ -98,9 +100,9 @@ Viber / Messenger / SMS / email providers (R-NT-x) get their own design doc — 
 - [ ] Monorepo tooling: plain folders vs turborepo — decide when the repo is scaffolded. (Owner: Larry)
 - [ ] Python dependency manager: uv (recommended, fast) vs poetry. (Owner: Larry)
 - [ ] PostHog: cloud (EU/US) vs self-host later — cloud free tier to start. (Owner: Larry)
-- [ ] Domain + DNS (blocked on product name, O-8).
+- [ ] Domain + DNS (blocked on product name, O-9).
 
 ## Rollout / next steps
-- [ ] This doc approved → log D-041.
+- [x] Approved 2026-09-09 → D-041 logged.
 - [ ] Remaining design docs against this map: session engine, data model, auth + consent, content authoring, review queue, payments + activation, notifications.
 - [ ] Week-one spike (02-voice-pipeline) validates the riskiest column of the manifest: Gemini Live from Railway Singapore.

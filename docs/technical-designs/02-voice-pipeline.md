@@ -2,7 +2,8 @@
 
 **Status:** Approved (2026-09-07)
 **Author:** Larry (Thar Linn Htet)
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-10 (updated to reflect D-042 session shape and D-045 Pipecat adoption)
+**Diagram:** [source](diagrams/voice-pipeline-architecture.drawio) · [preview](diagrams/voice-pipeline-architecture.svg)
 
 ## Requirements this implements
 - `R-TE-1` — response latency under 1 second from end of learner speech to start of May's speech
@@ -23,10 +24,12 @@ Audio **recording and storage** (R-ON-7, R-SE-9, R-PR-2, R-TE-10, R-PR-4) is a s
 - `D-036` — WebSocket transport with mandatory heartbeat, not WebRTC
 - `D-037` — hosting on Railway Singapore, not Vercel
 - `D-038` — Next.js frontend + FastAPI (Python) backend
+- `D-042` — 40-minute sessions, up to one per day (subscription model)
+- `D-045` — Pipecat adopted as the hot-path voice framework (`GeminiLiveLLMService`, VAD, interruption); `google-genai` on raw asyncio kept as documented fallback
 
 ## Context
 
-Every session is a 30-minute spoken conversation. The loop below repeats on every learner turn, and the product's teaching method (retrieval practice under time pressure) only works if the loop feels like a conversation, not a walkie-talkie with lag:
+Every session is a 40-minute spoken conversation (D-042). The loop below repeats on every learner turn, and the product's teaching method (retrieval practice under time pressure) only works if the loop feels like a conversation, not a walkie-talkie with lag:
 
 ```
 Learner speaks → model hears → model thinks → May speaks back
@@ -64,13 +67,13 @@ Cost of the proxy: one extra network hop, ~50–150ms. See latency budget below 
 
 ### Hosting: Railway (Singapore), not Vercel
 
-Researched 2026-09-07. Vercel added native WebSocket support in June 2026 (public beta), but a connection dies when the function hits its max duration: **5 minutes hard cap on Hobby, ~13 minutes on Pro** (800s), and 30 minutes only behind a separate beta flag. Our session is 30 minutes of continuous audio — that means 2–5 forced mid-conversation disconnects per session, each one triggering a Gemini session re-attach (audio gap + extra billed state-summary tokens, against the spirit of R-TE-5). On top of that, Next.js on Vercel needs the `experimental_upgradeWebSocket()` API — experimental, on top of a beta.
+Researched 2026-09-07. Vercel added native WebSocket support in June 2026 (public beta), but a connection dies when the function hits its max duration: **5 minutes hard cap on Hobby, ~13 minutes on Pro** (800s), and 30 minutes only behind a separate beta flag. Our session is 40 minutes of continuous audio (D-042) — that means 3–8 forced mid-conversation disconnects per session, each one triggering a Gemini session re-attach (audio gap + extra billed state-summary tokens, against the spirit of R-TE-5). On top of that, Next.js on Vercel needs the `experimental_upgradeWebSocket()` API — experimental, on top of a beta.
 
 Third-party analysis (Ably) and Vercel's own guidance agree: for long-lived realtime connections like AI voice, use a persistent server or a managed realtime provider.
 
-**Decision: two services on Railway's Singapore region — a Next.js frontend and a FastAPI (Python) backend.** The FastAPI service is a plain long-running process: it holds the 30-minute learner WebSocket, owns the Gemini Live connection, and later hosts the LangGraph-based session engine and plan generation. One platform, two deploys, ~$10–25/month at MVP scale. Founder already operates Railway for another product.
+**Decision: two services on Railway's Singapore region — a Next.js frontend and a FastAPI (Python) backend.** The FastAPI service is a plain long-running process: it holds the 40-minute learner WebSocket (D-042), owns the Gemini Live connection (via Pipecat, D-045), and later hosts the LangGraph-based session engine and plan generation. One platform, two deploys, ~$10–25/month at MVP scale. Founder already operates Railway for another product.
 
-Why Python for the backend: LangGraph (Python-first) fits the session-stage state machine and the slow-brain work (plan generation, item-log processing, placement scoring), and the founder is deliberately investing in Python/FastAPI skills. Note: the live audio loop itself uses **no framework** — the backend talks to Gemini Live over a raw WebSocket, because every layer in the hot path costs latency (R-TE-1) and hides the socket control we need for barge-in and reconnect.
+Why Python for the backend: LangGraph (Python-first) fits the session-stage state machine and the slow-brain work (plan generation, item-log processing, placement scoring); **Pipecat (also Python) carries the hot-path voice loop** (D-045); and the founder is deliberately investing in Python/FastAPI skills. Pipecat provides the FastAPI WebSocket transport, `GeminiLiveLLMService`, client VAD, and interruption handling — most of the plumbing this doc originally planned to hand-write. D-045's exit criteria (barge-in <300ms per R-TE-2/R-SE-8, end-to-end <1s per R-TE-1) enforce the same spirit as the earlier "no framework in the hot path" rule: nothing between learner and Gemini adds silent delay. The raw-asyncio path on Google's `google-genai` SDK remains the **documented fallback** if Pipecat can't hit either number in the week-one spike.
 
 Consequence for storage: audio recordings go to Cloudflare R2 (S3-compatible, zero egress fees) rather than Vercel Blob, since we are no longer on Vercel. Details in `03-audio-storage.md`.
 
@@ -141,8 +144,8 @@ If the Gemini connection cannot be established or dies repeatedly mid-session: t
 Both services run natively on a laptop with full dev/prod parity — FastAPI (`uvicorn`) and Next.js (`npm run dev`) are the same processes Railway runs. Gemini Live is reached with a dev API key from `.env`. One gotcha: the mic API requires HTTPS except on `localhost`, so testing on a real phone needs a tunnel (`npx cloudflared tunnel --url http://localhost:8000`) — which is also how the week-one Myanmar-mobile latency measurement runs before anything is deployed.
 
 ## Rollout / next steps
-- [ ] **Week-one spike (D-011):** thin prototype — browser mic → FastAPI proxy → Gemini Live → audio back, with the structured item log and per-stage token metering. No UI polish. This is also the founder's first FastAPI + WebSockets build — budget extra time for learning.
+- [ ] **Week-one spike (D-011, D-045):** thin prototype — browser mic → Pipecat/FastAPI proxy → Gemini Live → audio back, with the structured item log and per-stage token metering. Verify D-045's two exit criteria: **barge-in <300ms** (watch for pipecat-ai/pipecat issue #3381 on Gemini interruption handling) and **end-to-end latency <1s** on real Myanmar-style mobile. No UI polish. This is also the founder's first FastAPI + WebSockets + Pipecat build — budget extra time for learning.
 - [ ] Measure the real latency budget from a Myanmar mobile connection (or simulated 4G with packet loss) against the table above.
-- [ ] Decision gate: if end-to-end > 1s at p75, fall back to the direct-from-browser design; if audio is too choppy, revisit LiveKit Cloud.
+- [ ] Decision gate: if Pipecat blows either D-045 exit criterion, swap to the raw-asyncio + `google-genai` fallback (D-045). If end-to-end > 1s at p75 even on the fallback, revisit the direct-from-browser design; if audio is too choppy, revisit LiveKit Cloud.
 - [x] Log the stack decisions in the decisions log — done: D-035, D-036, D-037, D-038.
 - [ ] Then draft `03-audio-storage.md` (Cloudflare R2 — switched from Vercel Blob when hosting moved to Railway) — recording is a hard dependency of the marketing asset (R-ON-7).

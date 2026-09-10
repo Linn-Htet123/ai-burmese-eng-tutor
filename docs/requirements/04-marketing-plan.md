@@ -4,14 +4,14 @@
 > **Naming note.** **May** is the name of the tutor character only. The product itself is unnamed. It appears in these documents as **[PRODUCT NAME TBD]**. Search that string when the name is chosen.
 
 
-**Version 1, 2026-09-05**
+**Version 1.1, 2026-09-10** (subscription pivot per D-042)
 **Status: the weakest of the four documents. Distribution has barely been discussed and should be treated as unsolved.**
 
 ---
 
 ## 1. Positioning
 
-**One line:** Twelve live speaking sessions. Interview-ready in four weeks. In Burmese and English, with a tutor who upgrades the way you already speak.
+**One line:** Interview-ready in 4 weeks. Then keep going. Daily 40-minute practice with a tutor who upgrades the way you already speak, in Burmese and English. $25/month, cancel anytime.
 
 **Open and start, no booking.** Worth putting in the advertisement itself, because it is the clearest difference from a human tutor and it removes the objection people do not say out loud: that arranging a lesson is a hassle and speaking badly to a stranger is worse.
 
@@ -89,21 +89,20 @@ Not for launch.
 
 ## 4. Pricing and packaging
 
-Price is unresolved. See `02-business-requirements.md` section 4. Packaging can be settled now.
+Price is **$25/month subscription** (D-042). Packaging framing is what marketing needs to nail.
 
-**Sell twelve sessions, not four weeks.**
+**Sell the pack, not the subscription.**
 
-The founder's concern was that four weeks compares badly to a one-year Udemy subscription. Correct concern, wrong fix. Lengthening the course costs authoring time and delays validation to solve an optics problem.
+Under D-042 the product is a monthly subscription, but marketing surfaces the **first-month pack** (D-043) — the interview-ready-in-4-weeks arc — because "$25/month for daily English practice" is a generic pitch in a way that "interview-ready in 4 weeks" is not. The pack is the story; the subscription is the delivery mechanism.
 
-Frame against tutoring instead, which is the honest comparison. Twelve live sessions with a tutor is $100 to $300 on italki. Twelve live sessions here is a fraction of that. Framed that way the product looks cheap rather than short.
-
-**Working assumption: $10 to $15 for the course, $8 per month afterwards.** Confirm against the ten interviews before publishing anything.
+Frame against tutoring, which remains the honest comparison. ~7-9 hours of daily practice across the first month is comparable to the same hours of private tutoring at $8-25/hr on italki, but for $25 flat. Framed that way the product looks cheap rather than automated.
 
 ### Packaging rules
 
 * One price, one product. No tiers at launch.
-* No free trial of the full course. A free first session is fine and doubles as placement.
-* Money-back if you finish all twelve and are not happy. Cheap to offer, since almost nobody who finishes asks, and it removes the main objection from a buyer who has been disappointed by courses before.
+* No free trial of the full subscription. A **free first session** is fine and doubles as placement.
+* First-billing-cycle refund policy TBD (see PRD R-PY-6 / O-10). Whatever it is, say it plainly in the copy — buyers who have been disappointed by courses before need this stated up front.
+* Cancel-anytime must be visible next to the price. Removes the "am I signing up for a year?" objection before it forms.
 
 ---
 
@@ -115,7 +114,7 @@ For parents the barrier was safety. For adults it is **embarrassment**. This buy
 
 An AI tutor is an advantage here, and the marketing should say so directly: nobody is watching, nobody is judging, you can be bad at this in private until you are not.
 
-Second barrier: they have bought English courses before and not finished them. Address it head-on. The deadline and the twelve fixed sessions are the answer, so say that in the copy rather than hoping they notice.
+Second barrier: they have bought English courses before and not finished them. Address it head-on. The **pack-shaped first month** — a real week-4 milestone with a before/after clip, inside a subscription they can cancel anytime — is the answer (D-042, D-043). Say that in the copy rather than hoping they notice.
 
 ---
 
@@ -149,10 +148,11 @@ Second barrier: they have bought English courses before and not finished them. A
 | Awareness | Landing page visits from group posts | Directional only |
 | Interest | Email signups per post | 5%+ of visits |
 | Trial | Free first session booked | 30% of signups |
-| Conversion | Free session to paid course | 25%+ |
-| **Retention** | **Reach session 12** | **50%+ for cohort 1** |
+| Conversion | Free session to paid subscription | 25%+ |
+| **Retention (month 1)** | **Reach the week-4 before/after clip** | **50%+ for cohort 1** |
+| **Retention (month 2)** | **Renew for month 2 after the week-4 clip** | **40%+ of month-1 completers** |
 | Referral | Graduates who refer someone | 20% |
-| Revenue | Course sales per month | 17, the $200/month target |
+| Revenue | Active paid subscribers | 8 by month 4, the $200/month target ($25/mo × 8) |
 
 Everything except completion is a guess. Completion is the number the business lives on.
 
@@ -163,7 +163,7 @@ Everything except completion is a guess. Completion is the number the business l
 **Headline options, to test:**
 * Your English isn't wrong. It's just not smooth yet.
 * You know what you want to say. Say it faster.
-* Twelve sessions. One interview. In four weeks.
+* Interview-ready in 4 weeks. Daily practice with May. $25/month.
 
 **Body, the shape of it:**
 
@@ -171,7 +171,7 @@ You think in Burmese. You translate. By the time the English is ready, the conve
 
 That isn't a grammar problem. It's speed. Speed only comes from speaking, and speaking is the one thing every course you've bought didn't make you do.
 
-May asks you real interview questions. You answer however you can. She tells you what worked, then gives you the version a native speaker would use, and you say it back. Twelve sessions, four weeks, in Burmese and English.
+May asks you real interview questions. You answer however you can. She tells you what worked, then gives you the version a native speaker would use, and you say it back. Daily 40-minute practice. Interview-ready in 4 weeks. $25/month, in Burmese and English, cancel anytime.
 
 **What to avoid:**
 * "Fluent in 30 days". Nobody believes it and it attracts the wrong buyer.
@@ -186,6 +186,6 @@ May asks you real interview questions. You answer however you can. She tells you
 1. **Distribution is unsolved.** Section 3 is reasoned guesswork with no evidence. Test cheaply and early, and be willing to throw the whole section out.
 2. **Myanmar or Thailand first.** Genuinely unclear, and it changes payment, pricing, and channel.
 3. **Payment rails.** Automated rails remain open. Launch runs on manual bank transfer plus manual activation, which is fine for the first 50 customers but must be visible in the copy so it does not surprise buyers at checkout.
-4. **Price.** Blocks the landing page.
+4. ~~**Price.** Blocks the landing page.~~ **Resolved by D-042: $25/month.**
 5. **What the first month markets with**, given the proof asset does not exist yet. Probably the founder's own story, which is untested as copy.
 6. **Whether "no booking" or "in Burmese" is the stronger hook.** Both are real differentiators. Test them against each other in the group posts before spending anything.
