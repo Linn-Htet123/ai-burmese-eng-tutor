@@ -54,7 +54,7 @@ Learner says a sentence, May confirms what worked and gives the smoother native 
 ---
 
 ## D-005: Four-week course, not an open-ended subscription
-**Date:** 2026-09-04 · **Status:** decided, and the biggest untested bet in the plan
+**Date:** 2026-09-04 · **Status:** ~~decided~~ **superseded by D-042 (2026-09-08)** — pivoted to a monthly subscription with a pack-shaped first-month arc
 
 Twelve live sessions over four weeks, tied to a real deadline.
 
@@ -64,16 +64,20 @@ Twelve live sessions over four weeks, tied to a real deadline.
 
 **Would revisit if:** completion rates come back low anyway, which would mean the deadline is not doing the work.
 
+**Superseded by D-042.** The subscription-first framing that D-005 explicitly rejected is now the model. D-042 preserves the four-week deadline flavour via the first-month pack arc (D-043) and the week-4 before/after clip as renewal moment, but revenue is monthly, not one-off.
+
 ---
 
 ## D-006: Optional monthly subscription after the course
-**Date:** 2026-09-04 · **Status:** decided, build second
+**Date:** 2026-09-04 · **Status:** ~~decided, build second~~ **superseded by D-042 (2026-09-08)** — subscription is the whole product, not a post-course option
 
 Course acquires, subscription retains.
 
 **Why.** Captures the people who want to keep going without imposing open-endedness on everyone. Also gives the spaced-review intervals beyond three weeks somewhere to live, which a four-week course cannot.
 
 **Sequencing:** course first. Do not build subscription mechanics until completion is proven.
+
+**Superseded by D-042.** The subscription mechanic is now built first, not second — it is the product, not a follow-on. The "spaced-review beyond three weeks needs somewhere to live" argument was correct and is what makes D-042 pedagogically better than a fixed four-week course.
 
 ---
 
@@ -137,11 +141,13 @@ Ask ten Burmese adults what they **currently spend** on English, not what they w
 ---
 
 ## D-012: 30-minute sessions, three per week
-**Date:** 2026-09-05 · **Status:** decided
+**Date:** 2026-09-05 · **Status:** ~~decided~~ **superseded by D-042 (2026-09-08)** — 40 minutes, up to daily (with hard one-per-day cap)
 
 **Why.** Shorter than the kids product's 40 minutes. Adults have jobs, and 30 minutes of hard speaking is more taxing than 40 minutes of guided reading. Three per week gives twelve sessions over four weeks, which is a clean course shape.
 
 **Rejected:** 40 minutes, carried over from kids. No mid-session break either, adults do not need one at 30 minutes.
+
+**Superseded by D-042.** Session length went back to 40 minutes (the D-042 "hard speaking ceiling" argument overturned this decision's "taxing" argument). Cadence went from three per week to daily-with-cap. The clean-course-shape reasoning was tied to D-005 (also superseded).
 
 ---
 
@@ -394,3 +400,301 @@ The tutor character is now **May**. Previously **Aye**.
 - "Tr. May" — schoolteacher register, conflicts with the explicit "not a schoolteacher" line in PRD Section 11.
 
 **Product name is still TBD** — May is the character only, per D-031.
+
+---
+
+## D-035: Voice traffic is proxied through our backend, not browser-direct to Gemini
+**Date:** 2026-09-07 · **Status:** decided
+
+Browser ↔ our backend ↔ Gemini Live. The browser never holds a Google API key.
+
+**Why.** Three server-side needs beat the ~100–200ms proxy cost: the D-011 item log is captured in-process instead of surviving a round-trip from a flaky mobile client; token metering (R-TE-8) is counted on the way through and cannot be skipped; API keys stay on the server, so no short-lived token system to build. The latency budget in the voice pipeline design still fits under R-TE-1's 1 second.
+
+**Rejected:** direct browser → Gemini (lowest latency, kept as documented fallback if the week-one spike blows the budget); hybrid direct-audio + proxied-control (2× the code for a problem we do not have yet).
+
+**Would revisit if:** week-one spike measures end-to-end p75 above 1 second.
+
+Design: `docs/technical-designs/02-voice-pipeline.md`.
+
+---
+
+## D-036: WebSocket transport with mandatory heartbeat, not WebRTC
+**Date:** 2026-09-07 · **Status:** decided
+
+Browser ↔ backend audio runs over a WebSocket carrying Opus frames, with a ping/pong heartbeat (20s interval, two missed pongs → reconnect with backoff) and stateful resume by session ID.
+
+**Why.** 2–3 days build versus 1.5–2 weeks for DIY WebRTC (media server + TURN = an ops burden a solo founder should not take on in month one). The heartbeat is mandatory because silent middlebox disconnects on mobile carriers are a known failure mode — the founder hit exactly this class of bug on a previous product where the WebSocket had no heartbeat.
+
+**Rejected:** DIY WebRTC (build + ops cost); managed WebRTC / LiveKit Cloud (strongest alternative, ~$50–100/month at target scale — documented as the upgrade path if real-world Myanmar testing shows WebSocket audio is too choppy); HTTP chunked streaming (breaks barge-in R-SE-8 and likely the 1s budget).
+
+**Would revisit if:** Myanmar-mobile testing shows unacceptable audio choppiness (TCP retransmit stalls) → move to LiveKit Cloud.
+
+---
+
+## D-037: Hosting on Railway Singapore, not Vercel
+**Date:** 2026-09-07 · **Status:** decided
+
+**Why.** Researched 2026-09-07: Vercel's native WebSocket support (public beta, June 2026) force-closes connections at the function max duration — 5 minutes on Hobby, ~13 minutes on Pro, 30 minutes only behind a second beta flag — and Next.js needs an experimental upgrade API on top. Our session is 30 minutes of continuous audio; forced mid-conversation drops trigger Gemini re-attach costs against the spirit of R-TE-5. Railway runs plain long-lived processes, has a Singapore region (~30–50ms from Yangon), and the founder already operates it for another product. ~$10–25/month at MVP scale.
+
+**Consequence.** Audio recordings go to Cloudflare R2 (S3-compatible, zero egress) instead of Vercel Blob. Storage design: `03-audio-storage.md`.
+
+**Rejected:** all-Vercel (duration limits, beta-on-experimental stack); Vercel app + tiny Railway relay (two platforms for a solo founder).
+
+**Would revisit if:** Vercel ships GA WebSockets with ≥30-minute connections.
+
+---
+
+## D-038: Next.js frontend + FastAPI (Python) backend
+**Date:** 2026-09-07 · **Status:** decided
+
+Two services on Railway: a Next.js frontend (TypeScript) and a FastAPI backend (Python) that holds the learner WebSocket, owns the Gemini Live connection, and will host the LangGraph-based session engine and plan generation.
+
+**Why.** Founder call, two drivers: LangGraph fits the session-stage state machine and the non-realtime LLM work (plan generation, item-log processing, placement scoring), and Python is its first-class ecosystem; and the founder is deliberately investing in Python/FastAPI skills. Guardrail: the live audio loop uses no framework — raw WebSocket to Gemini — because every layer in the hot path costs latency (R-TE-1).
+
+**Rejected:** Next.js full-stack / TypeScript-only with LangGraph JS (fastest to ship, one service — reversed by the founder in favour of the Python learning investment and ecosystem); hybrid TS-now-Python-later (two languages eventually anyway, without the learning benefit now).
+
+**Cost accepted:** two deploys, CORS/auth wiring between services, and a slower week one while learning FastAPI + WebSockets.
+
+**Would revisit if:** the week-one spike stalls on Python unfamiliarity badly enough to threaten the schedule — fallback is the TypeScript monolith with LangGraph JS.
+
+---
+
+## D-039: Session audio — server-side two-track capture to Cloudflare R2
+**Date:** 2026-09-07 · **Status:** decided
+
+Both voices captured in the FastAPI proxy (audio already flows through it per D-035), stored as two separate Opus tracks (learner + May), buffered on server disk during the session, uploaded to Cloudflare R2 at session end, background-transcoded with ffmpeg to a mixed M4A for playback, served via 15-minute presigned URLs after an owner-or-founder check (R-TE-10).
+
+**Why.** Server-side capture makes the least reliable machine in the system (a mid-range phone on Myanmar mobile data) irrelevant to the product's most irreplaceable artefact (R-ON-7). Separate tracks keep learner-only audio cuttable for before/after marketing clips — un-mixing a combined file is impossible. M4A because Opus playback is unreliable on older Safari/iOS, exactly our audience. R2 because reads are free (replays cost nothing) after Vercel Blob died with the Vercel hosting plan (D-037).
+
+**Rejected:** browser-side recording (depends on the flakiest machine); one mixed file (kills learner-only clips forever); streaming multipart upload (upgrade path, not MVP); raw Opus playback (fails on old iPhones); audio in Postgres (wrong tool).
+
+**Would revisit if:** recordings become revenue-critical enough that losing one to a rare server crash is unacceptable → move to streaming multipart upload.
+
+Design: `docs/technical-designs/03-audio-storage.md`.
+
+---
+
+## D-040: Recordings are kept indefinitely, beyond course expiry
+**Date:** 2026-09-07 · **Status:** decided
+
+Recordings are not deleted when course access expires at 8 weeks (D-029). Deletion happens only on learner request, and then completely (all files plus database row).
+
+**Why.** The before/after clip is the marketing asset, the retention tool, and the investor demo (vision doc); it gains value with time. Storage cost is trivial (~$0.015/GB-month; the whole first cohort is ~12 GB).
+
+**Would revisit if:** per-learner audio ever approaches ~1 GB, or a privacy/regulatory requirement forces a retention window.
+
+---
+
+## D-041: Remaining stack picks — Railway Postgres, SQLAlchemy + Alembic, Sentry + PostHog, Tailwind + shadcn/ui
+**Date:** 2026-09-07 (logged on doc approval 2026-09-09) · **Status:** decided
+
+The stack manifest's remaining choices, completing D-035–D-038:
+- **PostgreSQL on Railway** — same platform as the services, private network to the backend, ~$5/month. Rejected: Neon/Supabase (extra vendor, public-internet DB traffic; Neon stays the fallback).
+- **SQLAlchemy 2.0 + Alembic** — the Python standard; migrations only, never auto-push. Rejected: SQLModel (smaller community), raw SQL (slow to build).
+- **Sentry + PostHog**, both free tiers — errors plus the landing→signup→placement→paid funnel, measured from learner #1. Rejected: analytics-later (the onboarding funnel is the riskiest flow).
+- **Tailwind + shadcn/ui** — owned components, light enough for mid-range phones.
+
+Full manifest, third-party blast-radius table, and deliberate non-picks (no auth vendor, no Redis, no queues, no staging): `docs/technical-designs/01-architecture-and-stack.md`.
+
+---
+
+## D-042: Subscription model — $25/month, daily 40-minute sessions
+**Date:** 2026-09-08 · **Status:** decided, supersedes the one-time 4-week-course packaging (D-024/D-029 framing, R-PY-2)
+
+The product is sold as a **monthly subscription at $25/month**. Each learner gets **up to one session per day, 40 minutes** (hard cap — no banking unused days into longer sessions).
+
+**Session rhythm alternates:** unit day (new authored material) → review day (review queue + free conversation on the learner's material) → unit day → … Review days are generated from the review queue, not authored, which stretches the authored pack across ~5–6 weeks and matches spaced-repetition mechanics.
+
+**First-month arc kept:** the first four weeks carry an explicit pack-shaped goal (see D-043) and end with the before/after clip at week 4. The clip's job changes from completion prize to **renewal moment** — the learner hears their own improvement right when month 2 billing is due.
+
+**The economics (from the BRD cost basis, ~$0.007–0.013/min):**
+| Usage | AI cost/month | Kept of $25 |
+|---|---|---|
+| Every day (whale) | $8.40–15.60 | $9.40–16.60 |
+| ~70% of days (realistic) | $5.90–10.90 | $14–19 |
+| 3 days/week (light) | $3.40–6.20 | $19–22 |
+
+**Why.** Founder call. Recurring revenue instead of a one-shot $35; 50 subscribers ≈ $1,250/month steady. Daily practice is also better pedagogy and finally makes the long spaced-review intervals real (the PRD itself flags the 4-week course as too short for retention — this was the argued case for a subscription all along).
+
+**Guardrails:** one-session-per-day cap protects margin and pedagogy. All cost figures re-check against real R-TE-8 token logs in week one; price or minutes adjust **before** launch if reality is worse.
+
+**Cost accepted:** no finish line (mitigated by the first-month arc + week-4 clip); monthly manual bank-transfer renewal and founder re-activation (payments doc must design this); the "different from every subscription app" positioning weakens; session shape stretches from 30 to 40 minutes (PRD section 6 stage times scale ~+33%).
+
+**Docs still to update for this:** BRD pricing + cost tables, PRD sections 6 (session shape) and 13 (payment/plans), marketing plan packaging. Tracked as an open task, not yet done.
+
+**Would revisit if:** week-one token logs put whale-cost above ~$16/month, or month-2 renewal proves materially worse than course completion did.
+
+---
+
+## D-043: Packs are a profession-based roadmap; interviews is only the MVP test pack
+**Date:** 2026-09-08 · **Status:** decided, widens D-003
+
+The interview pack is **pack #1, the MVP experiment** — not the product's identity. The engine (May + upgrade loop + daily practice) is profession-agnostic; packs are the topic skin. Roadmap direction: nurses/doctors (patients in English), street food & shop owners (serving foreign customers), delivery & drivers, teachers, engineers, office workers.
+
+**First-month goal is pack-shaped** ("handle a foreign patient confidently in 4 weeks", "serve a tourist start to finish"), replacing the interview-specific framing everywhere it appears.
+
+**Why.** Founder call. The upgrade-loop mechanic works on any profession's situations; profession packs multiply the addressable market without touching the engine. The greyed-out coming-soon pack list (R-TP-6) already measures which pack to author next — this decision gives that list its roadmap.
+
+**Tension flagged, accepted deliberately:** D-003 chose software/design/finance/teaching/students as the initial market. This roadmap adds blue-collar segments (street food, delivery) — bigger population, likely tighter budgets for $25/month. The pack-interest data from R-TP-6 decides the actual authoring order; no segment commitment is made here beyond pack #1.
+
+**Would revisit if:** pack-interest data shows demand concentrated in one profession — then depth in that pack beats breadth.
+
+---
+
+## D-044: Voice model reaffirmed — Gemini Live; GPT-6 Astra evaluated and parked
+**Date:** 2026-09-09 · **Status:** decided
+
+Researched on GPT-6 Astra's launch week (released 2026-09-03/04) at the founder's request.
+
+**Why Gemini Live stays, verified against primary sources:**
+1. **Burmese is officially supported** — Google's Live API capabilities page lists 97 audio-output languages including "Burmese `my`", with mid-conversation language switching. This is load-bearing: levels 0–3 are 60–90% Burmese instruction (R-LV-4), and May explains upgrades in Burmese at every level.
+2. **Astra is not a voice model.** Its documented capabilities are coding, math, computer/browser use; OpenAI's own audio API docs do not mention it. OpenAI's realtime voice line is the separate gpt-realtime family, which publishes no Burmese voice support (their translate model outputs 13 languages only).
+3. **Cost:** Astra at $10/M input, $50/M output is 3–4× Gemini Flash Live ($3/$12) — incompatible with the D-042 subscription margin.
+
+**Parked, not rejected forever:** Astra (or similar frontier text models) remains a candidate for slow-brain jobs (planner, level judge, QA analysis) post-MVP if plan quality on cheaper models disappoints. Not MVP: second vendor for an unproven quality gain.
+
+**Fallback if Gemini's spoken Burmese disappoints in the week-one spike:** compare against gpt-realtime-2 — never Astra.
+
+**Caveat recorded:** OpenAI's Astra page itself was unreachable during research (403); conclusion rests on their audio docs omitting Astra and launch coverage. Re-verify if OpenAI announces Astra audio modalities.
+
+---
+
+## D-045: Voice plumbing — Pipecat adopted
+**Date:** 2026-09-09 (revised same day: trial → adopted, founder call after comparing LiveKit Agents, Google's `google-genai` SDK, and TEN Framework) · **Status:** decided
+
+The voice-moving layer (browser audio ↔ Gemini Live) is built on **Pipecat** (open-source Python voice-agent framework, BSD, ~13k stars, maintained by Daily). Pipecat ships a `GeminiLiveLLMService`, a FastAPI WebSocket transport, VAD, and interruption handling — most of the plumbing 02-voice-pipeline planned to hand-write.
+
+**Alternatives compared (researched 2026-09-09, including issue trackers):** LiveKit Agents (best interruption reputation, but drags in WebRTC media-server infra rejected in D-036, and has a known 6–12s first-turn latency bug with Gemini Flash Live); Google's `google-genai` SDK directly (first-party, perfect stack fit, but most hand-assembly — kept as the documented fallback); TEN Framework (smallest community, most configuration — wrong bet for a solo founder).
+
+**Week-one verification (adoption is decided; these verify it in practice):**
+1. **Barge-in:** May stops within **300ms** of learner speech (R-SE-8 / R-TE-2). Known risk: pipecat-ai/pipecat issue #3381 — the Gemini service historically used the slow transcription signal for interruptions (1–2s delay) instead of Gemini's instant `interrupted` signal. Check if fixed in the current release; if not, patch it ourselves (the fix path is documented in the issue).
+2. **Latency:** end-of-speech → May's first audio under **1s** (R-TE-1) on a real Myanmar-style mobile connection.
+
+**Documented fallback if Pipecat proves unfixable on either number:** Google's official `google-genai` SDK on asyncio (their examples cover exactly this use case). Our stage conductor logic is written as our own code either way — with Pipecat it lives as custom pipeline processors; on the fallback it sits directly on asyncio. The conductor survives a swap.
+
+**If adopted:** pin the exact Pipecat version; upgrades are deliberate events with the eval suite run before and after — the project has a documented history of breaking changes and interrupt/resume bug classes (queue recreation, deadlock, frame-drop, race conditions).
+
+**Why trial anyway, despite the known warts:** the Gemini Live wiring, VAD, and transport come free — the spike gets built in days, not weeks, and the two exit tests are cheap to measure. The research (2026-09-09) that surfaced both the value and the warts is what shaped the criteria.
+
+**Relation to D-038's "no framework in the hot path":** that rule targeted general LLM frameworks (LangChain-style) wrapping the socket. Pipecat is a hot-path-native voice framework built for latency; the rule's spirit — nothing between the learner and Gemini that adds silent delay — is exactly what the exit criteria enforce.
+
+**Would revisit if:** Pipecat passes the spike but later releases regress latency or interruption behaviour — the raw-asyncio fallback remains documented in 02-voice-pipeline.
+
+---
+
+## D-046: Stage cutover — fresh Gemini context per stage, handover notes, cached cover lines
+**Date:** 2026-09-09 · **Status:** decided
+
+Each of a session's stages runs in its own fresh Gemini Live context (implements R-SE-3 / R-TE-4). The 1–2s reconnect gap is masked by a pre-recorded May transition line (cached TTS, zero marginal cost). Every new stage context opens with two handover notes: the **long-term chart** (level, pack, weak points, recap items, profile — from Postgres) and the **short-term handover** (what happened earlier this session, built live by the conductor). Stage time budgets are soft — May is never cut off mid-sentence; the conductor sends a wrap-up-when-natural instruction near budget end.
+
+**Why.** One accumulated 40-minute context re-bills the growing history every turn (the BRD's named cost leak) and drifts in quality. Fresh contexts with compact summaries are both the cost model and the quality model — and the handover notes are exactly the "compact state summary passed forward" R-SE-3 names, so May never appears to forget.
+
+**Rejected:** one 40-minute context (cost leak, violates R-SE-3); one context with "forget previous stage" instructions (still accumulates cost; forget-instructions unreliable); hard per-minute stage cuts (robotic, breaks the persona).
+
+**Cost accepted:** ~10 authored + recorded transition lines per session type, and cutover logic in the conductor.
+
+Design: `docs/technical-designs/04-session-engine.md`.
+
+---
+
+## D-047: Quality guard — watch and nudge, with a weekly prompt loop and eval suite
+**Date:** 2026-09-09 · **Status:** decided
+
+May's per-turn item log (D-011) is scored by plain code against the R-UL rules as each report arrives — never in the audio path, so zero latency. Two reaction lanes: **flags** to a weekly founder QA list (invented upgrades additionally blocked from the review queue until approved, per R-UL-9), and rare **nudges** — one corrective text instruction into May's live context when drift damages the lesson (missed repeat, stage far over budget). Improvement loop: flags → rewrite the weak prompt sentence → run the eval suite (~20 saved test conversations, grown from real flagged sessions) → ship. Prompt changes never ship without the suite passing. Flag-rate per 100 turns is the tracked teaching-quality metric.
+
+**Why.** R-UL-1 demands 100% rule compliance; prompts alone deliver ~95% silently. Checking each turn *before* the learner hears it would add ~1s and destroy R-TE-1. Watching the already-existing reports costs nothing and makes every violation visible.
+
+**Rejected:** prompt-only trust (silent failures reach paying adults); hard-gating every turn (kills the latency budget).
+
+**Known limit, accepted:** the item log is self-reported by the model — mitigated by weekly founder spot-checks of transcripts against reports.
+
+**Would revisit if:** flag rates stay high after several prompt iterations — then selective hard-gating of the worst stage type gets reconsidered despite the latency cost.
+
+---
+
+## D-048: Session engine tool split — LangGraph thinks, our Python conducts, Pipecat carries audio
+**Date:** 2026-09-09 · **Status:** decided
+
+- **Planner, post-session processor, level judge** → LangGraph graphs (step-shaped LLM workflows; checkpointing prevents half-done bookkeeping, retries handle bad LLM outputs, traces make debugging visible).
+- **Live conductor** (stage switching, soft timers, handover building, nudge delivery, pause/resume) → our own Python, registered as custom Pipecat processors (D-045).
+- Judgment stays code where rules are exact: level promotion/demotion (R-LV-8/9/10) and item grading are pure logic; LLM calls only where language is produced.
+
+**Why.** The conductor is continuous and event-driven — many simultaneous concerns, no step shape — so a graph framework adds ceremony without its gifts; the three thinking jobs are exactly step-shaped and get resume/retry/tracing free. Discussed across six topics with the founder, 2026-09-09.
+
+**Rejected:** LangGraph everywhere (wrong shape for the conductor); LangGraph nowhere (~a week of hand-built plumbing for the thinking jobs, and the founder wants the LangGraph skill).
+
+Design: `docs/technical-designs/04-session-engine.md`.
+
+---
+
+## D-049: Data model — UUIDs everywhere, append-only item-log events, plans as JSONB
+**Date:** 2026-09-10 · **Status:** decided
+
+Three structural choices for the single Railway Postgres database (17 tables, full schema in the design doc):
+
+1. **UUID primary keys on every table.** Session and recording IDs are exposed in URLs; guessable integers would undercut R-TE-10's access posture. Rejected: auto-increment (guessable), mixed scheme (two conventions for no gain at this scale).
+2. **`item_log_events` is append-only and the source of truth.** Every per-turn report from May (D-011) is stored exactly as emitted, never updated or deleted; review items, metrics, and recaps are derived from it. A processor bug is healed by re-running the derivation over raw events — learning history can never be silently corrupted. Rejected: process-and-discard (a bug destroys the product's core asset with no way back).
+3. **Session plans as one JSONB document per row.** Written once by the planner, read once by the conductor, never queried inside; cross-plan questions are answered by the events (what happened), not plans (what was intended). No migration cost while the plan shape evolves weekly. Rejected: normalized plan_stages/plan_items tables (structure enforcement the planner's validate step already provides, at constant migration cost).
+
+**The working rule, recorded for future tables:** *normalize what you query, JSON what you pass around.*
+
+Design: `docs/technical-designs/05-data-model.md` (+ ER diagram `diagrams/05-data-model.drawio`).
+
+---
+
+## D-050: Content authored as YAML in git, per band with shared core, synced to Postgres
+**Date:** 2026-09-11 · **Status:** decided
+
+Three choices for the content that R-CA-3 warns is the schedule's biggest risk:
+
+1. **Git is the source of truth.** Units are YAML files under `content/` in the repo; a validated `sync-content` step upserts them into the D-049 tables (the DB copy is a cache, never hand-edited). R-CA-1's version control comes free from git; the R-CA-4 admin tool shrinks to two read-only screens (units list + flagged-upgrade review). Rejected: DB + editing UI (nested-form CRUD costs a solo dev-founder more than it saves — revisit when a non-dev co-author joins); Docs/Sheets import (silent drift, no diffs).
+2. **Authored per band (5), shared core + overrides — not per level (11).** PRD 3.1 defines behaviour by five bands; one shared core (situation, questions, pool tags) plus five band sections (drills, low-band grammar) cuts the authoring estimate from 55–110 hours to **~40–60 hours**. Escape hatch: a band can be split per-unit later with no format change. Rejected: full per-level authoring (the PRD's own structure says sessions differ by band); author-once-model-adapts (improvisation by another name — the R-UL-8 firewall exists because that produces confident nonsense).
+3. **Upgrade pool at pack level, tag-linked** (`pool.yaml`): one entry serves many units; units draw by tag. Runtime-generated upgrades (R-UL-9) stay DB-only as `pending_review` and enter the files only by deliberate founder promotion. Rejected: per-unit pools (copy-paste drift).
+
+**Guardrail:** CI validation (schema + semantic checks: step-down targets exist, tags match, ready-units complete per R-CA-2) — a typo cannot reach the planner. The real schema is extracted from authoring unit 01, not invented ahead of it.
+
+Design: `docs/technical-designs/06-content-format.md`.
+
+---
+
+## D-051: Auth — JWT with DB-backed refresh, no phone OTP, email-based reset
+**Date:** 2026-09-11 · **Status:** decided
+
+- **JWT access tokens (15 min) in httpOnly Secure cookies + opaque refresh tokens stored hashed in Postgres** (~30d, rotated, revocable by row deletion). Founder call for the JWT pattern; the DB-backed refresh token closes pure-JWT's revocation gap. Rejected: server-side sessions (the recommended simpler option — declined for ecosystem familiarity); auth vendors (D-041); localStorage tokens (XSS).
+- **No phone OTP at signup.** Signup speed (R-ON-1/9) and zero SMS dependency beat data purity; monthly manual payment contact (D-042) is the human verification. Revisit with automated payments.
+- **Password reset via email links**; phone-only learners get founder-assisted reset via Viber/Messenger. Signup copy encourages adding an email for this reason.
+- **Placement artefacts** (closes a D-049 open question): level + confidence + transcript ref on the placement session row; the assignment written to `level_history` in the same transaction; D-027's manual review is a flag on that history row.
+- **Learner deletion flow: deliberately parked.** D-040's promise stands; founder-by-hand covers any request at cohort scale. Real design waits on an actual request or the accountant's answer on Myanmar payment-record retention (asked at business registration).
+
+Design: `docs/technical-designs/07-auth-and-consent.md`.
+
+---
+
+## D-052: Payment rails — personal-wallet P2P transfers with receipt-screenshot claims
+**Date:** 2026-09-11 · **Status:** decided, makes D-026/D-042's manual rail concrete
+
+- **Methods shown at the paywall:** KBZPay, Wave Pay, AyaPay (founder's personal wallet number + static QR exported from each app), PromptPay QR in THB for Thailand-based learners, bank transfer as fallback. All P2P to the founder's own accounts — **zero merchant integration, no business-entity requirement**.
+- **The claim flow:** learner transfers in their wallet app → taps "I have paid" → **uploads the receipt screenshot (required)** → stored privately in R2 (`receipts/…`, founder-only) → **founder notified by transactional email** with an admin link → founder matches receipt against the wallet app in the pending-payments screen → Activate (period starts from activation day) or Reject with reason.
+- **Grace and renewal:** reminder at period_end − 3 days; 3-day grace after expiry (banner, not a lock); expired blocks new sessions only — history, recordings, and progress stay readable forever.
+- **Founder notification is email, not Firebase** — Firebase is mobile-push infrastructure; one email to one founder needs only the transactional-email provider password reset already requires (e.g. Resend; joins the doc-01 manifest).
+
+**Rejected:** merchant API integrations (entity requirements unverified, P2P gets the same reach); claims without receipt upload (matching unlabeled transfers across four wallets is guesswork); no grace period (churn over bank latency); stacking renewal periods from period_end (late payers would pay for dead days).
+
+**Would revisit if:** subscriber volume makes founder matching a real time cost — then KBZPay/Wave merchant rails and automated confirmation re-open, alongside the business-entity work.
+
+Design: `docs/technical-designs/08-payments.md`.
+
+---
+
+## D-053: Notification channels — Telegram bot primary, FCM push + email alongside; Viber/Messenger/SMS deferred
+**Date:** 2026-09-11 · **Status:** decided, amends R-NT-1's channel list
+
+- **Telegram bot is the primary channel.** Bot API is free and unlimited with no approval process; connect is two taps (`t.me/<bot>?start=<token>` → Start → chat id linked). The bot doubles as a free human support inbox (learner replies visible in admin).
+- **Firebase (FCM) web push** secondary — free, reliable on Android Chrome; on iOS Safari only after add-to-home-screen, so never promised as reliable on iPhone (Telegram covers iOS). **Email** third. Fallback chain per message: Telegram → push → email.
+- **Deferred with research receipts (2026-09-11):** Viber Business (partner-only, ~€150–200/month country minimums — 60–80× the need); Messenger (24-hour window policy prohibits scheduled reminders); SMS via local gateway (~12 MMK/msg — cheap and zero-friction but one-way; the documented fallback if cohort-1's Telegram connect-rate disappoints — that connect-rate is the explicit test of this decision).
+- Message inventory unchanged and closed: daily nudge, absence ×3 hard cap, renewal reminder, session-12 moment — nothing else (R-NT-5).
+- Consequences: `learners` gains telegram_chat_id / push_subscription / preferred_channel / nudge_time columns (D-049 amendment); Firebase (FCM only) joins the stack behind a notify() adapter; R-NT-1's PRD channel list needs a one-line amendment.
+
+**Would revisit if:** Telegram connect-rate in cohort 1 is weak → switch primary to the SMS fallback (SMSPoh-class local gateway, adapter already designed for).
+
+Design: `docs/technical-designs/09-notifications.md`.
