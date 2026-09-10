@@ -639,3 +639,18 @@ Three structural choices for the single Railway Postgres database (17 tables, fu
 **The working rule, recorded for future tables:** *normalize what you query, JSON what you pass around.*
 
 Design: `docs/technical-designs/05-data-model.md` (+ ER diagram `diagrams/05-data-model.drawio`).
+
+---
+
+## D-050: Content authored as YAML in git, per band with shared core, synced to Postgres
+**Date:** 2026-09-11 · **Status:** decided
+
+Three choices for the content that R-CA-3 warns is the schedule's biggest risk:
+
+1. **Git is the source of truth.** Units are YAML files under `content/` in the repo; a validated `sync-content` step upserts them into the D-049 tables (the DB copy is a cache, never hand-edited). R-CA-1's version control comes free from git; the R-CA-4 admin tool shrinks to two read-only screens (units list + flagged-upgrade review). Rejected: DB + editing UI (nested-form CRUD costs a solo dev-founder more than it saves — revisit when a non-dev co-author joins); Docs/Sheets import (silent drift, no diffs).
+2. **Authored per band (5), shared core + overrides — not per level (11).** PRD 3.1 defines behaviour by five bands; one shared core (situation, questions, pool tags) plus five band sections (drills, low-band grammar) cuts the authoring estimate from 55–110 hours to **~40–60 hours**. Escape hatch: a band can be split per-unit later with no format change. Rejected: full per-level authoring (the PRD's own structure says sessions differ by band); author-once-model-adapts (improvisation by another name — the R-UL-8 firewall exists because that produces confident nonsense).
+3. **Upgrade pool at pack level, tag-linked** (`pool.yaml`): one entry serves many units; units draw by tag. Runtime-generated upgrades (R-UL-9) stay DB-only as `pending_review` and enter the files only by deliberate founder promotion. Rejected: per-unit pools (copy-paste drift).
+
+**Guardrail:** CI validation (schema + semantic checks: step-down targets exist, tags match, ready-units complete per R-CA-2) — a typo cannot reach the planner. The real schema is extracted from authoring unit 01, not invented ahead of it.
+
+Design: `docs/technical-designs/06-content-format.md`.
