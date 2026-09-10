@@ -667,3 +667,19 @@ Design: `docs/technical-designs/06-content-format.md`.
 - **Learner deletion flow: deliberately parked.** D-040's promise stands; founder-by-hand covers any request at cohort scale. Real design waits on an actual request or the accountant's answer on Myanmar payment-record retention (asked at business registration).
 
 Design: `docs/technical-designs/07-auth-and-consent.md`.
+
+---
+
+## D-052: Payment rails — personal-wallet P2P transfers with receipt-screenshot claims
+**Date:** 2026-09-11 · **Status:** decided, makes D-026/D-042's manual rail concrete
+
+- **Methods shown at the paywall:** KBZPay, Wave Pay, AyaPay (founder's personal wallet number + static QR exported from each app), PromptPay QR in THB for Thailand-based learners, bank transfer as fallback. All P2P to the founder's own accounts — **zero merchant integration, no business-entity requirement**.
+- **The claim flow:** learner transfers in their wallet app → taps "I have paid" → **uploads the receipt screenshot (required)** → stored privately in R2 (`receipts/…`, founder-only) → **founder notified by transactional email** with an admin link → founder matches receipt against the wallet app in the pending-payments screen → Activate (period starts from activation day) or Reject with reason.
+- **Grace and renewal:** reminder at period_end − 3 days; 3-day grace after expiry (banner, not a lock); expired blocks new sessions only — history, recordings, and progress stay readable forever.
+- **Founder notification is email, not Firebase** — Firebase is mobile-push infrastructure; one email to one founder needs only the transactional-email provider password reset already requires (e.g. Resend; joins the doc-01 manifest).
+
+**Rejected:** merchant API integrations (entity requirements unverified, P2P gets the same reach); claims without receipt upload (matching unlabeled transfers across four wallets is guesswork); no grace period (churn over bank latency); stacking renewal periods from period_end (late payers would pay for dead days).
+
+**Would revisit if:** subscriber volume makes founder matching a real time cost — then KBZPay/Wave merchant rails and automated confirmation re-open, alongside the business-entity work.
+
+Design: `docs/technical-designs/08-payments.md`.
