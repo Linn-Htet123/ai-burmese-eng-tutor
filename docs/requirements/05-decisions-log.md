@@ -683,3 +683,18 @@ Design: `docs/technical-designs/07-auth-and-consent.md`.
 **Would revisit if:** subscriber volume makes founder matching a real time cost — then KBZPay/Wave merchant rails and automated confirmation re-open, alongside the business-entity work.
 
 Design: `docs/technical-designs/08-payments.md`.
+
+---
+
+## D-053: Notification channels — Telegram bot primary, FCM push + email alongside; Viber/Messenger/SMS deferred
+**Date:** 2026-09-11 · **Status:** decided, amends R-NT-1's channel list
+
+- **Telegram bot is the primary channel.** Bot API is free and unlimited with no approval process; connect is two taps (`t.me/<bot>?start=<token>` → Start → chat id linked). The bot doubles as a free human support inbox (learner replies visible in admin).
+- **Firebase (FCM) web push** secondary — free, reliable on Android Chrome; on iOS Safari only after add-to-home-screen, so never promised as reliable on iPhone (Telegram covers iOS). **Email** third. Fallback chain per message: Telegram → push → email.
+- **Deferred with research receipts (2026-09-11):** Viber Business (partner-only, ~€150–200/month country minimums — 60–80× the need); Messenger (24-hour window policy prohibits scheduled reminders); SMS via local gateway (~12 MMK/msg — cheap and zero-friction but one-way; the documented fallback if cohort-1's Telegram connect-rate disappoints — that connect-rate is the explicit test of this decision).
+- Message inventory unchanged and closed: daily nudge, absence ×3 hard cap, renewal reminder, session-12 moment — nothing else (R-NT-5).
+- Consequences: `learners` gains telegram_chat_id / push_subscription / preferred_channel / nudge_time columns (D-049 amendment); Firebase (FCM only) joins the stack behind a notify() adapter; R-NT-1's PRD channel list needs a one-line amendment.
+
+**Would revisit if:** Telegram connect-rate in cohort 1 is weak → switch primary to the SMS fallback (SMSPoh-class local gateway, adapter already designed for).
+
+Design: `docs/technical-designs/09-notifications.md`.
