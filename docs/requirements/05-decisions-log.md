@@ -654,3 +654,16 @@ Three choices for the content that R-CA-3 warns is the schedule's biggest risk:
 **Guardrail:** CI validation (schema + semantic checks: step-down targets exist, tags match, ready-units complete per R-CA-2) — a typo cannot reach the planner. The real schema is extracted from authoring unit 01, not invented ahead of it.
 
 Design: `docs/technical-designs/06-content-format.md`.
+
+---
+
+## D-051: Auth — JWT with DB-backed refresh, no phone OTP, email-based reset
+**Date:** 2026-09-11 · **Status:** decided
+
+- **JWT access tokens (15 min) in httpOnly Secure cookies + opaque refresh tokens stored hashed in Postgres** (~30d, rotated, revocable by row deletion). Founder call for the JWT pattern; the DB-backed refresh token closes pure-JWT's revocation gap. Rejected: server-side sessions (the recommended simpler option — declined for ecosystem familiarity); auth vendors (D-041); localStorage tokens (XSS).
+- **No phone OTP at signup.** Signup speed (R-ON-1/9) and zero SMS dependency beat data purity; monthly manual payment contact (D-042) is the human verification. Revisit with automated payments.
+- **Password reset via email links**; phone-only learners get founder-assisted reset via Viber/Messenger. Signup copy encourages adding an email for this reason.
+- **Placement artefacts** (closes a D-049 open question): level + confidence + transcript ref on the placement session row; the assignment written to `level_history` in the same transaction; D-027's manual review is a flag on that history row.
+- **Learner deletion flow: deliberately parked.** D-040's promise stands; founder-by-hand covers any request at cohort scale. Real design waits on an actual request or the accountant's answer on Myanmar payment-record retention (asked at business registration).
+
+Design: `docs/technical-designs/07-auth-and-consent.md`.
