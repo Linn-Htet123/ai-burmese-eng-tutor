@@ -3,9 +3,11 @@
 AI voice English tutor for Burmese adults. Tutor character name is **May**. Product name TBD.
 
 ## Status
-Planning phase. No code yet — only docs. System design is in progress.
+**Build phase.** System design is COMPLETE — all nine technical designs (`docs/technical-designs/01–09`) approved 2026-09-07…11, decisions logged through D-053. Code may now be scaffolded when the human asks for it.
 
-**IMPORTANT: Do not scaffold code, install deps, or create technical-design files unless the human asks. This repo stays docs-only until system design is finished.**
+**Next milestone: the week-one spike** — Pipecat + Gemini Live, one session stage end-to-end, measuring the four make-or-break numbers: D-011 item log reliability · barge-in ≤300ms (R-SE-8, pipecat issue #3381 check per D-045) · end-to-end latency <1s (R-TE-1) · spoken Burmese quality. Design assumptions meet reality there; several D-xxx entries carry explicit "would revisit if" clauses keyed to spike results.
+
+Read `docs/technical-designs/01-architecture-and-stack.md` before writing any code — it is the stack manifest (Next.js + FastAPI on Railway Singapore, Pipecat, LangGraph, Railway Postgres, R2).
 
 ## Where things live
 - `docs/requirements/` — source of truth. Read before answering product or scope questions.
