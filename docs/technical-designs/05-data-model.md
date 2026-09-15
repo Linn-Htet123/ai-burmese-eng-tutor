@@ -89,7 +89,7 @@ learners ─┬─ subscriptions ── payments
                                         └── recordings
 ```
 
-Diagram: [05-data-model.drawio](diagrams/05-data-model.drawio) · [05-data-model.svg](diagrams/05-data-model.svg)
+Diagram: [05-data-model.excalidraw](diagrams/05-data-model.excalidraw) · [05-data-model.svg](diagrams/05-data-model.svg)
 
 ### The indexes that matter (all others are just FK indexes)
 - `review_items (learner_id, next_review_at)` — the planner's daily "what's due" query

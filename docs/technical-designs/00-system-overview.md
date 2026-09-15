@@ -20,7 +20,7 @@ A web app where a Burmese adult opens a page, presses one button, and is in a li
 Who and what touches the system, and nothing else.
 
 ![System context](diagrams/00-system-context.svg)
-*Source files: [drawio](diagrams/00-system-context.drawio) · Deep dives: [01-architecture-and-stack](01-architecture-and-stack.md)*
+*Source files: [source](diagrams/00-system-context.excalidraw) · Deep dives: [01-architecture-and-stack](01-architecture-and-stack.md)*
 
 Two humans: the **learner** (phone browser, no install) and the **founder** (admin + content + payment approval). Five external services: **Gemini Live** (May's voice+brain, D-044), **R2** (files, D-039), **Telegram/FCM/email** (notifications, D-053), **wallet apps** (money moves *outside* the system — manual P2P per D-052), **Sentry/PostHog** (observability, D-041).
 
@@ -28,8 +28,8 @@ Two humans: the **learner** (phone browser, no install) and the **founder** (adm
 
 The boxes we deploy and the learner journey ①–⑧ through them.
 
-![Product overview](diagrams/product-overview-architecture.svg)
-*Source: [drawio](diagrams/product-overview-architecture.drawio) · Deep dives: [01](01-architecture-and-stack.md) (stack manifest), [02](02-voice-pipeline.md) (voice), [03](03-audio-storage.md) (audio)*
+![Product overview](diagrams/01-architecture-and-stack.svg)
+*Source: [source](diagrams/01-architecture-and-stack.excalidraw) · Deep dives: [01](01-architecture-and-stack.md) (stack manifest), [02](02-voice-pipeline.md) (voice), [03](03-audio-storage.md) (audio)*
 
 Two services on **Railway Singapore** (D-037): the **Next.js frontend** (TypeScript, learner + admin UI) and the **FastAPI backend** (Python, D-038) with **Railway Postgres** beside them. The backend holds every module: voice proxy (Pipecat, D-045), session engine, review queue, payments, notifier, admin API. Rule of the house: *LangGraph thinks, our Python conducts, Pipecat carries audio* (D-048) — and no framework ever sits in the sub-1s hot path.
 
@@ -37,8 +37,8 @@ Two services on **Railway Singapore** (D-037): the **Next.js frontend** (TypeScr
 
 The latency-critical machinery: browser ↔ FastAPI ↔ Gemini, plus two-track recording to R2.
 
-![Voice pipeline](diagrams/voice-pipeline-architecture.svg)
-*Source: [drawio](diagrams/voice-pipeline-architecture.drawio) · Deep dives: [02-voice-pipeline](02-voice-pipeline.md), [03-audio-storage](03-audio-storage.md)*
+![Voice pipeline](diagrams/02-voice-pipeline.svg)
+*Source: [source](diagrams/02-voice-pipeline.excalidraw) · Deep dives: [02-voice-pipeline](02-voice-pipeline.md), [03-audio-storage](03-audio-storage.md)*
 
 Key numbers: WebSocket + heartbeat (ping 20s, 2 misses → reconnect, D-036) · latency budget ~575–960ms end-to-end · both voices captured server-side as separate Opus tracks → R2 → M4A for old-iPhone playback (D-039) · recordings kept forever (D-040).
 
@@ -46,8 +46,8 @@ Key numbers: WebSocket + heartbeat (ping 20s, 2 misses → reconnect, D-036) · 
 
 What happens in the milliseconds of a single upgrade-loop exchange, including barge-in.
 
-![Voice turn sequence](diagrams/00-voice-turn-sequence.svg)
-*Source: [drawio](diagrams/00-voice-turn-sequence.drawio) · Deep dives: [02](02-voice-pipeline.md) §latency, [04](04-session-engine.md) §guard*
+![Voice turn sequence](diagrams/02-voice-turn-sequence.svg)
+*Source: [source](diagrams/02-voice-turn-sequence.excalidraw) · Deep dives: [02](02-voice-pipeline.md) §latency, [04](04-session-engine.md) §guard*
 
 The two promises this diagram carries: May's voice starts **< 1 second** after the learner stops (R-TE-1), and May goes silent **≤ 300ms** when interrupted (R-SE-8 — the Pipecat #3381 verification in the week-one spike, D-045). The guard reads May's per-turn report (item log, D-011) on a side path — watching costs zero latency (D-047).
 
@@ -55,8 +55,8 @@ The two promises this diagram carries: May's voice starts **< 1 second** after t
 
 Every state a session can be in, and the six stages inside a live one.
 
-![Session lifecycle](diagrams/00-session-lifecycle.svg)
-*Source: [drawio](diagrams/00-session-lifecycle.drawio) · Deep dive: [04-session-engine](04-session-engine.md)*
+![Session lifecycle](diagrams/04-session-lifecycle.svg)
+*Source: [source](diagrams/04-session-lifecycle.excalidraw) · Deep dive: [04-session-engine](04-session-engine.md)*
 
 Planned the night before (R-SE-1, plan shown in Burmese before start) → six stages, each a **fresh Gemini context + handover notes** so May stays cheap *and* never forgets (D-046) → pause holds 10 minutes (R-SE-4) → ending early still counts everything (R-SE-5) → "processed" only when all five artefacts exist (R-SE-10). Time budgets are soft — May is never cut off mid-sentence.
 
@@ -64,8 +64,8 @@ Planned the night before (R-SE-1, plan shown in Burmese before start) → six st
 
 How a finished session becomes review items, a recap promise, stats, and possibly a level change — and feeds tomorrow's plan. This is where **LangGraph** lives (D-048).
 
-![Post-session pipeline](diagrams/00-post-session-pipeline.svg)
-*Source: [drawio](diagrams/00-post-session-pipeline.drawio) · Deep dives: [04](04-session-engine.md) §processor/judge, [05](05-data-model.md)*
+![Post-session pipeline](diagrams/04-post-session-pipeline.svg)
+*Source: [source](diagrams/04-post-session-pipeline.excalidraw) · Deep dives: [04](04-session-engine.md) §processor/judge, [05](05-data-model.md)*
 
 Items graded by **delivery** — fluent / hesitant / failed (R-RV-8; hesitant is the grade this product exists to fix). The three recap items return next session *unconditionally* — the promise machine (R-RC-2/3). Level movement is **pure code**, never AI mood (R-LV-8/9); the LLM only writes the announcement.
 
@@ -73,8 +73,8 @@ Items graded by **delivery** — fluent / hesitant / failed (R-RV-8; hesitant is
 
 From paywall to active subscription, with the manual rail made stateful.
 
-![Payment flow](diagrams/00-payment-flow.svg)
-*Source: [drawio](diagrams/00-payment-flow.drawio) · Deep dive: [08-payments](08-payments.md)*
+![Payment flow](diagrams/08-payment-flow.svg)
+*Source: [source](diagrams/08-payment-flow.excalidraw) · Deep dive: [08-payments](08-payments.md)*
 
 Personal-wallet P2P (KPay/Wave/AyaPay/PromptPay QR — zero merchant integration, D-052) · receipt screenshot required with every claim · founder emailed, approves in admin · 3-day grace, periods start at activation, history stays readable after expiry forever.
 
@@ -83,7 +83,7 @@ Personal-wallet P2P (KPay/Wave/AyaPay/PromptPay QR — zero merchant integration
 The 17 tables everything above reads and writes.
 
 ![Data model](diagrams/05-data-model.svg)
-*Source: [drawio](diagrams/05-data-model.drawio) · Deep dive: [05-data-model](05-data-model.md)*
+*Source: [source](diagrams/05-data-model.excalidraw) · Deep dive: [05-data-model](05-data-model.md)*
 
 Three structural rules (D-049): **UUIDs everywhere** (nothing guessable in URLs, R-TE-10) · **item_log_events is append-only truth** (any processing bug is healed by replay) · ***normalize what you query, JSON what you pass around*** (plans are JSONB; review items are proper rows).
 

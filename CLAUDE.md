@@ -40,12 +40,12 @@ Read `docs/technical-designs/00-system-overview.md` first — the whole system o
 - Every technical-design doc cites the PRD IDs it implements.
 
 ## Harness rules
-- `.claude/rules/backend.md`, `db.md`, `frontend.md` are placeholder stubs — this repo is docs-only. Ignore or delete until a real stack exists.
+- Coding rules live in `.claude/rules/`: `coding.md` (cross-cutting, loads for every code file), `backend.md` (Python/FastAPI), `frontend.md` (Next.js/TypeScript), `db.md` (SQLAlchemy/Alembic). They auto-load by path scope. Read before touching code.
 
 ## Diagrams
 - **Before drawing, follow the `diagram-selection` skill** (auto-triggers, or see `.claude/skills/diagram-selection/SKILL.md`) to pick the right diagram type — sequence vs flowchart vs C4 — based on what the design is showing. Prevents flowchart-for-a-round-trip mistakes.
-- Use the `drawio:drawio` skill for architecture and flow diagrams. It auto-triggers when you ask for a diagram, or invoke it explicitly with `/drawio:drawio`.
-- Prefer Mermaid input — the skill converts it to `.drawio` via the draw.io Desktop CLI (installed at `/Applications/draw.io.app`).
-- Store `.drawio` source files next to what they document — requirements diagrams in `docs/requirements/diagrams/`, tech-design diagrams in `docs/technical-designs/diagrams/`. Also export a `.svg` alongside for GitHub preview.
-- File naming: `NN-short-title.drawio` + `NN-short-title.svg` (e.g. `04-voice-pipeline.drawio`).
-- Every technical-design doc that has a diagram should link to both the `.drawio` (source) and `.svg` (preview).
+- Tech-design diagrams are authored in **Excalidraw** (`excalidraw-diagram-generator` skill, or hand-edit at <https://excalidraw.com>). Requirements-side diagrams still use drawio for now.
+- Store `.excalidraw` source files next to what they document (tech-design diagrams in `docs/technical-designs/diagrams/`). Export `.svg` alongside for GitHub preview via `scripts/diagrams/render-excalidraw.js` (see `scripts/diagrams/README.md`).
+- File naming: `NN-short-title.excalidraw` + `NN-short-title.svg` (e.g. `04-voice-pipeline.excalidraw`).
+- Every technical-design doc that has a diagram should link to both the `.excalidraw` (source) and `.svg` (preview).
+- Old `.drawio` sources live under `diagrams/legacy/`; do not add new ones there.

@@ -3,7 +3,7 @@
 **Status:** Approved (2026-09-09)
 **Author:** Larry (Thar Linn Htet)
 **Last updated:** 2026-09-10 (cost figure + concurrency numbers aligned with D-042)
-**Diagram:** [source](diagrams/product-overview-architecture.drawio) · [preview](diagrams/product-overview-architecture.svg)
+**Diagram:** [source](diagrams/01-architecture-and-stack.excalidraw) · [preview](diagrams/01-architecture-and-stack.svg)
 
 ## Requirements this implements
 This doc is the map, not a feature. It carries the cross-cutting requirements every other design inherits:

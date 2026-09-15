@@ -638,7 +638,7 @@ Three structural choices for the single Railway Postgres database (17 tables, fu
 
 **The working rule, recorded for future tables:** *normalize what you query, JSON what you pass around.*
 
-Design: `docs/technical-designs/05-data-model.md` (+ ER diagram `diagrams/05-data-model.drawio`).
+Design: `docs/technical-designs/05-data-model.md` (+ ER diagram `diagrams/05-data-model.excalidraw`).
 
 ---
 

@@ -28,14 +28,15 @@ The before-and-after clip — a learner's week-one voice next to their week-four
 
 ```
 During session (in the FastAPI proxy — audio flows through it anyway, per D-035)
-   learner Opus frames  ──► append to /tmp/{session}/learner.ogg
-   May's audio (PCM→Opus) ─► append to /tmp/{session}/may.ogg
+   learner PCM frames (16-bit / 16 kHz, from browser) ──► append to /tmp/{session}/learner.raw.pcm
+   May's PCM frames (from Gemini)                     ──► append to /tmp/{session}/may.raw.pcm
 
 Session end (background job, not in the hot path)
-   1. upload both .ogg tracks to R2                    (originals, keep forever)
-   2. ffmpeg: mix both tracks → session.m4a → R2       (the playback file)
-   3. write recordings row in DB (session, learner, duration, R2 keys)
-   4. delete /tmp/{session}/
+   1. ffmpeg: encode each .raw.pcm → .ogg (Opus)       (compact source of truth, keep forever)
+   2. upload both .ogg tracks to R2
+   3. ffmpeg: mix both tracks → session.m4a → R2       (the playback file)
+   4. write recordings row in DB (session, learner, duration, R2 keys)
+   5. delete /tmp/{session}/
 
 Playback
    learner presses play → backend checks: is this YOUR recording (or founder)?
@@ -47,7 +48,7 @@ Playback
 - **Server-side capture (not browser-side).** The proxy already handles every audio frame. Capturing there costs almost nothing, and a flaky phone can never lose a recording. A browser-side recorder would have to survive tab closes, crashes, and Myanmar mobile drops, then upload 10+ MB over the same bad connection.
 - **Two tracks, learner and May separate.** Before/after marketing clips (R-PR-2) want the *learner's* voice. With separate tracks that is a clean cut; from a mixed file, un-mixing is impossible. The mixed M4A for playback is derived, not the source of truth.
 - **Buffer on disk, upload at end.** One upload per track per session, with retry. A mid-session server crash loses that one recording — rare and acceptable at MVP scale. (Streaming multipart upload is the documented upgrade if recordings become revenue-critical.)
-- **Opus capture → M4A playback.** Opus is what the live pipeline already speaks (tiny, fast). But Opus playback is unreliable on older Safari/iOS — exactly our audience — so a background ffmpeg step produces a universally playable M4A. Seconds of CPU per session, fully async.
+- **PCM capture → Opus storage → M4A playback.** Gemini Live only accepts PCM, so the live pipeline speaks PCM (16-bit / 16 kHz). We store the *source of truth* as Opus in an OGG container — PCM is ~5–10× larger and we're keeping recordings forever (D-040). The transcode is a background ffmpeg step at session end, off the hot path. Opus playback is unreliable on older Safari/iOS, so the same session-end job produces a universally playable M4A too. Seconds of CPU per session, fully async.
 - **Cloudflare R2.** S3-compatible object storage, ~$0.015/GB-month, **zero egress fees** — learners replaying sessions costs us nothing. All access goes through a thin storage module (`storage.py`) so the vendor can be swapped by rewriting one file.
 - **Presigned URLs for access control (R-TE-10).** R2 objects are private. The backend authorises (recording owner or founder only), then signs a URL valid for 15 minutes. No audio bytes ever stream through our backend at playback time.
 
@@ -97,7 +98,7 @@ Keep indefinitely (D-040). Under D-042 there is no course expiry — the subscri
 
 ## Open questions
 - [ ] R2 region/jurisdiction check: R2 location hints — is `apac` close enough for upload from Railway Singapore? (Upload is async, so latency matters little; verify anyway.) (Owner: Larry)
-- [ ] Exact Opus container details from the pipeline (ogg pages vs raw frames) — decides whether capture is pure file-append or needs a light muxing step. Resolve during the week-one spike. (Owner: Larry)
+- [x] ~~Exact Opus container details from the pipeline~~ Resolved 2026-09-13: PCM on the wire (Gemini requirement), so live capture is a raw PCM append; the Opus/OGG file is produced by ffmpeg at session end. No live muxing needed.
 - [ ] Where does the ffmpeg job run — in-process background task (simplest) or a small worker queue? Start in-process; revisit if session-end CPU spikes hurt live sessions. (Owner: Larry)
 - [ ] Learner-requested deletion flow (UI + actual object deletion) — MVP feature or post-MVP? (Owner: Larry)
 
