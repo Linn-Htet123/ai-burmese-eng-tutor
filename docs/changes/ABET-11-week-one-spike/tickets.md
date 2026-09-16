@@ -10,7 +10,7 @@ Each ticket is a vertical slice — a demoable piece of the spike, not a "make t
 
 | id | title | blocked by | scenarios covered | tracker | status |
 |---|---|---|---|---|---|
-| T1 | Scaffold FastAPI + Pipecat + Gemini Live minimum voice loop | — | R1 S1 | [#12](https://github.com/Linn-Htet123/ai-burmese-eng-tutor/issues/12) | todo |
+| T1 | Scaffold FastAPI + Pipecat + Gemini Live minimum voice loop | — | R1 S1 | [#12](https://github.com/Linn-Htet123/ai-burmese-eng-tutor/issues/12) | done (wiring proven; real log_item awaits T2 audio) |
 | T2 | Next.js client — mic capture + Silero VAD + PCM WebSocket streaming | T1 | R1 S1, R1 S3, R3 S1 | [#13](https://github.com/Linn-Htet123/ai-burmese-eng-tutor/issues/13) | todo |
 | T3 | Barge-in path — client VAD-fires + local playback stop + upstream interrupt frame | T1, T2 | R2 S1, R2 S2 | [#14](https://github.com/Linn-Htet123/ai-burmese-eng-tutor/issues/14) | todo |
 | T4 | Server-side disk capture — learner.raw.pcm, may.raw.pcm, frames.jsonl | T1 | R4 S1, R4 S2 | [#15](https://github.com/Linn-Htet123/ai-burmese-eng-tutor/issues/15) | todo |
