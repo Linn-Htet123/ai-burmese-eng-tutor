@@ -698,3 +698,25 @@ Design: `docs/technical-designs/08-payments.md`.
 **Would revisit if:** Telegram connect-rate in cohort 1 is weak → switch primary to the SMS fallback (SMSPoh-class local gateway, adapter already designed for).
 
 Design: `docs/technical-designs/09-notifications.md`.
+
+---
+
+## D-054: Voice loop uses continuous streaming + server-side VAD; client-side VAD dropped
+**Date:** 2026-09-17 · **Status:** decided, amends D-045 and reshapes T2 of the ABET-11 spike
+
+The week-one spike proved that Gemini Live is designed for a **continuous mic stream**, not for discrete utterance blobs. Sending one blob per utterance (as the client-VAD approach requires) confuses Gemini's server-side VAD: replies come late, get cut off mid-sentence, or never arrive. A working reference implementation (Larry's prior demo, streaming 100ms 16kHz PCM chunks with no client VAD) contradicted the design assumption from D-045.
+
+- **New shape of the hot path:** browser AudioWorklet resamples 48kHz mic → 16kHz mono PCM, sends every 100ms over the WebSocket. **No client-side VAD.** Gemini Live's server-side VAD alone decides turn boundaries. Response audio (24kHz PCM) is scheduled gaplessly through a separate 24kHz AudioContext.
+- **`@ricky0123/vad-web` removed** from the frontend dependencies. `use-vad.ts` deleted, `use-voice-socket.ts` replaced by `use-voice-stream.ts` (single hook, continuous streaming).
+- **Barge-in target (R-SE-8, ≤300ms) is now server-side.** Losing the client-VAD path means barge-in latency depends on Gemini's server VAD detecting learner speech — which observability from the spike suggests is fast enough for our threshold but not measured yet. **If server-side barge-in fails the R-SE-8 budget in real testing**, we bring back a client-VAD *interrupt-only* signal (send a cancel frame, don't change the audio stream shape).
+- **Barge-in overshoot from the spike** (May getting cut off by every breath) was Gemini's server VAD interpreting our silence-padded utterance chunks as continuous new speech. Not a real barge-in bug — an artefact of the client-VAD design. Streaming continuously should make it go away.
+- **Language quality still needs a real Burmese-speaker test.** The spike's "May didn't understand my Burmese" symptom was driven mostly by the discrete-utterance approach and by our system prompt telling May to reply in English only. The reference's Burmese output (`speechConfig.languageCode = "my-MM"`) proves Gemini CAN produce Burmese; whether the *comprehension* of Burmese input is good enough for a real learner is still open (H4 stays open).
+
+**Consequences for design docs:**
+- `docs/technical-designs/02-voice-pipeline.md` needs its "client VAD" references updated: streaming is unconditional; VAD lives on Gemini's side.
+- The ABET-11 spike's success criteria for T2 stay the same, but the mechanism differs. T3 (barge-in ≤300ms measurement) is now a server-VAD measurement, not a client-VAD one.
+- R-TE-3 ("stream only while speech is detected") is dropped — we stream unconditionally. The billing implication (paying for silence audio bytes) is negligible for the 16kHz raw PCM rate at MVP scale.
+
+**Would revisit if:** Gemini server-VAD-only barge-in cannot meet R-SE-8's 300ms budget on real Myanmar mobile networks — in which case a minimal client VAD returns as a barge-in *signal only*, without changing the audio stream shape (which is what caused the original problems).
+
+Design: `docs/technical-designs/02-voice-pipeline.md` (to be updated in the same PR).

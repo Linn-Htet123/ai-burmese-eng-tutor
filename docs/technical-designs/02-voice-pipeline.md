@@ -1,9 +1,19 @@
 # Voice pipeline — how the learner and May talk in real time
 
-**Status:** Approved (2026-09-07)
+**Status:** Approved (2026-09-07), amended by D-054 (2026-09-17)
 **Author:** Larry (Thar Linn Htet)
-**Last updated:** 2026-09-13
+**Last updated:** 2026-09-17
 **Diagram:** [source](diagrams/02-voice-pipeline.excalidraw) · [preview](diagrams/02-voice-pipeline.svg)
+
+## ⚠ Amendment — D-054 (2026-09-17)
+
+The ABET-11 week-one spike proved Gemini Live wants a **continuous mic stream**, not discrete VAD-cut utterance blobs. The pipeline is now:
+
+- **No client-side VAD.** Browser AudioWorklet streams 100ms 16kHz PCM chunks continuously; Gemini's server-side VAD alone decides turn boundaries.
+- **Barge-in is server-side.** R-SE-8's 300ms budget now depends on Gemini's server VAD, not our client one. If real testing shows it misses the budget, a minimal client VAD returns as an *interrupt-only signal* — never as a gate on the audio stream shape.
+- **R-TE-3 (send only during speech) is dropped.** We stream unconditionally; silence-byte cost at 16kHz raw PCM is negligible at MVP scale.
+
+The sections below still describe the intended flow; the "client VAD" boxes are replaced by "browser mic stream" until the diagram is refreshed.
 
 ## What this doc covers
 
