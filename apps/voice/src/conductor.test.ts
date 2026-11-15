@@ -153,11 +153,17 @@ describe("conductor", () => {
     expect(h.stages).toHaveLength(2);
     const s0 = h.stages[0]!;
     expect(s0.texts.some((t) => t.text.includes("stage_wrap_ready"))).toBe(true);
-    s0.handlers.onToolCall({ id: "1", name: "stage_wrap_ready", args: { note: "done" } });
+    s0.handlers.onToolCall({ id: "1", name: "stage_wrap_ready", args: { note: "Thura warmed up fast" } });
     await vi.waitFor(() => expect(s0.toolResponses).toHaveLength(1));
     s0.handlers.onTurnComplete();
     await vi.waitFor(() => expect(s0.closed).toBe(true));
     expect(h.stages).toHaveLength(2); // the pre-warmed one was reused, no third open
+    // Its prompt predates the wrap note, so the note arrives as a silent text turn before May begins.
+    const s1 = h.stages[1]!;
+    expect(s1.opts.systemInstruction).not.toContain("Thura warmed up fast");
+    expect(s1.texts[0]).toMatchObject({ generate: false });
+    expect(s1.texts[0]?.text).toContain("Thura warmed up fast");
+    expect(s1.texts[1]?.text).toContain("Begin the stage");
   });
 
   it("pause ends the audio stream, drops mic audio, and times out after the hold (R-SE-4)", async () => {

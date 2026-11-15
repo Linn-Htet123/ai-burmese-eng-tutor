@@ -45,7 +45,8 @@ export interface ConductorOptions {
 export class SessionConductor {
   private stageIndex = -1;
   private current: StageSession | undefined;
-  private prewarmed: { index: number; session: StageSession } | undefined;
+  /** notesAtOpen: how many handover notes the pre-warmed prompt already contains. */
+  private prewarmed: { index: number; session: StageSession; notesAtOpen: number } | undefined;
   private guard: GuardState;
   private readonly handoverNotes: string[] = [];
   private mayState: MayState = "listening";
@@ -185,7 +186,8 @@ export class SessionConductor {
   private async enterStage(i: number): Promise<void> {
     const old = this.current;
     this.clearTimers();
-    const session = this.prewarmed?.index === i ? this.prewarmed.session : await this.open(i);
+    const reused = this.prewarmed?.index === i ? this.prewarmed : undefined;
+    const session = reused ? reused.session : await this.open(i);
     this.prewarmed = undefined;
     this.stageIndex = i;
     this.current = session;
@@ -198,6 +200,11 @@ export class SessionConductor {
     this.setState("thinking");
     this.awaitingFirstAudio = true;
     this.lastVadEndAt = this.now();
+    // A pre-warmed prompt was built before the previous stage wrapped: pass on any notes it missed.
+    if (reused && this.handoverNotes.length > reused.notesAtOpen) {
+      const missed = this.handoverNotes.slice(reused.notesAtOpen).join(" | ");
+      session.sendText(`[handover from the previous stage, do not read aloud] ${missed}`, { generate: false });
+    }
     // D-046: the cached transition line goes here once recorded; for the spike May opens live.
     session.sendText("Begin the stage now with your opening line.", { generate: true });
 
@@ -218,8 +225,9 @@ export class SessionConductor {
   private async prewarm(i: number): Promise<void> {
     if (this.ended || this.prewarmed || i !== this.stageIndex + 1) return;
     try {
+      const notesAtOpen = this.handoverNotes.length;
       const session = await this.open(i);
-      this.prewarmed = { index: i, session };
+      this.prewarmed = { index: i, session, notesAtOpen };
     } catch (err) {
       this.io.log?.("prewarm failed", { stage: i, err: String(err) });
     }
