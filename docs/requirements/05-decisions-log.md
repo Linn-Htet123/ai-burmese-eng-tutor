@@ -698,3 +698,45 @@ Design: `docs/technical-designs/08-payments.md`.
 **Would revisit if:** Telegram connect-rate in cohort 1 is weak → switch primary to the SMS fallback (SMSPoh-class local gateway, adapter already designed for).
 
 Design: `docs/technical-designs/09-notifications.md`.
+
+---
+
+## D-054: TypeScript end to end — Node voice gateway replaces FastAPI + Pipecat
+**Date:** 2026-11-15 · **Status:** decided (founder call), supersedes D-038 and D-045, amends D-048
+
+The whole system is TypeScript: **Next.js + shadcn/ui** for the learner UI (`apps/web`), a **Node WebSocket gateway** on `ws` + `@google/genai` Live for the voice hot path (`apps/voice`), and **LangGraph.js + LangChain.js** for the planner, processor and level judge (`packages/brain`). Shared zod schemas and the wire protocol live in `packages/shared`. One pnpm monorepo, one language.
+
+- D-048's split survives with new names: *LangGraph thinks, our TypeScript conducts, the gateway carries audio.* No framework sits in the sub-1s hot path.
+- D-035/D-036/D-037 stand unchanged: proxied WebSocket, heartbeat, Railway Singapore. The gateway is a separate long-lived process because Next.js route handlers cannot hold a WebSocket upgrade.
+- Pipecat's jobs move into ~300 lines of our own code: client VAD in the browser, Gemini's own server VAD and interruption signal, and a conductor class with fakeable stage sessions.
+
+**Rejected:** keeping Pipecat as a Python sidecar (two languages and a second deploy for one solo founder); a custom Next.js server holding the socket (couples UI deploys to live calls).
+
+**Would revisit if:** the week-one spike shows barge-in above 300ms (R-SE-8) or interruption bugs that Pipecat had already solved on the Gemini path.
+
+Design: `docs/technical-designs/10-agentic-patterns-map.md`; ADR `docs/decisions/0001-typescript-voice-gateway.md`.
+
+---
+
+## D-055: "Agentic Design Patterns" (Gulli, 2025) is the build vocabulary
+**Date:** 2026-11-15 · **Status:** decided
+
+Every brain and gateway module names the book pattern it applies in its header comment, and doc 10 maps all 21 patterns to code, or says why a pattern is not used. Patterns are a vocabulary, not a checklist: one that does not earn its place is recorded as not used.
+
+---
+
+## D-056: The item log is Gemini Live function calling, and the guard gates two tools
+**Date:** 2026-11-15 · **Status:** decided for the spike, amends D-011 and D-047
+
+May reports the upgrade loop through eight function calls (`log_acknowledge`, `offer_upgrade`, `request_repeat`, `log_repeat_result`, `log_item_done`, `log_stall`, `log_step_down`, `stage_wrap_ready`), declared from one zod schema each. Two are **blocking**: `offer_upgrade` and `request_repeat`. May waits for the answer, and the guard can refuse with an instruction ("first name one specific thing they said well"). This turns R-UL-1, R-UL-3 and R-UL-5 into hard gates at zero added latency, because May is waiting on herself, not on a checker. The other six are non-blocking logs. Flags and nudges from D-047 remain for everything that cannot be gated (generic praise, invented upgrades, missed repeats).
+
+**Rejected:** a parallel text channel (no ordering guarantee with audio); post-turn extraction (a second model call per turn).
+
+**Would revisit if:** the spike shows May skipping calls while talking (measure calls per learner turn) or the blocking wait audibly stalls her voice.
+
+---
+
+## D-057: Code follows the 2026-10-22 change note
+**Date:** 2026-11-15 · **Status:** decided for code; PRD text still to be updated
+
+Three levels as an enum (`beginner | middle | advanced`, supersedes D-032 for code), five stages (greeting, review, phrase, talk, recap), and learner-chosen 10/20/40-minute sessions from the design canvas. At 40 minutes the stage split is 1/5/10/17/7. At 20 it is 1/3/5/8/3. At 10 the main talk is dropped: 1/3/4/2. New-item caps scale with length (8–12, 4–6, 1–3). The R-LV-8/9 promotion and demotion numbers are kept as written.

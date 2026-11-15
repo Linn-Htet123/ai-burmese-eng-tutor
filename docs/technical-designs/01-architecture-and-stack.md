@@ -1,5 +1,7 @@
 # Architecture overview and stack manifest
 
+> **Partly superseded (2026-11-15, D-054):** the stack is now TypeScript end to end. FastAPI, Python, SQLAlchemy and Pipecat are replaced by a Node WebSocket gateway (`apps/voice`) and LangGraph.js (`packages/brain`). Hosting, R2, Postgres and observability choices still hold. See [10-agentic-patterns-map](10-agentic-patterns-map.md).
+
 **Status:** Approved (2026-09-09)
 **Author:** Larry (Thar Linn Htet)
 **Last updated:** 2026-09-10 (cost figure + concurrency numbers aligned with D-042)
