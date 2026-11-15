@@ -214,3 +214,15 @@ describe("conductor resilience", () => {
     await Promise.resolve();
   });
 });
+
+describe("fake May's stand-in voice", () => {
+  it("is loud enough and pitched high enough for laptop speakers", async () => {
+    const { syllable } = await import("./fakeStage.ts");
+    const buf = syllable(0.1, 330);
+    let peak = 0;
+    for (let i = 0; i < buf.length; i += 2) peak = Math.max(peak, Math.abs(buf.readInt16LE(i)));
+    expect(buf.length).toBe(2 * 2400); // 100 ms at 24 kHz
+    expect(peak / 32767).toBeGreaterThan(0.25);
+    expect(peak / 32767).toBeLessThan(0.35);
+  });
+});

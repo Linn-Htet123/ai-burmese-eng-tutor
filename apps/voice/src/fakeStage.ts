@@ -3,7 +3,7 @@ import type { StageOpenOptions, StageSession, StageSessionFactory } from "./stag
 
 /**
  * A scripted stand-in for Gemini Live (FAKE_GEMINI=1). Lets the UI and conductor run end to end
- * with no API key: May "speaks" a soft tone with transcript, and after each learner turn she runs
+ * with no API key: May "speaks" an audible tone pattern (not words) with a transcript, and after each learner turn she runs
  * one full upgrade loop through the real tool gate. Never used in production.
  */
 export const openFakeStage: StageSessionFactory = async (opts: StageOpenOptions): Promise<StageSession> => {
@@ -24,7 +24,7 @@ export const openFakeStage: StageSessionFactory = async (opts: StageOpenOptions)
     const words = text.split(" ");
     words.forEach((w, i) => later(120 * i, () => h.onTranscript("may", (i ? " " : "") + w, false)));
     const chunks = Math.max(4, Math.round(words.length * 1.5));
-    for (let c = 0; c < chunks; c += 1) later(80 + c * 100, () => h.onAudio(tone(0.1, 196 + (c % 3) * 24)));
+    for (let c = 0; c < chunks; c += 1) later(80 + c * 100, () => h.onAudio(syllable(0.1, SYLLABLE_HZ[c % SYLLABLE_HZ.length] ?? 330)));
     later(120 + chunks * 100, () => {
       h.onUsage({ prompt: 400, response: 60 });
       h.onTurnComplete();
@@ -69,12 +69,22 @@ export const openFakeStage: StageSessionFactory = async (opts: StageOpenOptions)
   };
 };
 
-function tone(seconds: number, hz: number): Buffer {
+/** A rising-and-falling pitch pattern, so the stand-in voice reads as speech-like babble. */
+const SYLLABLE_HZ = [330, 392, 440, 392, 349, 415, 370] as const;
+
+/**
+ * One 100 ms "syllable": a mid-range tone with a soft attack and release, loud enough for laptop
+ * speakers (which barely play anything under ~200 Hz). It is a placeholder, not a voice.
+ */
+export function syllable(seconds: number, hz: number): Buffer {
   const n = Math.round(seconds * MAY_SAMPLE_RATE);
   const buf = Buffer.alloc(n * 2);
+  const peak = 0.3 * 32767;
   for (let i = 0; i < n; i += 1) {
     const env = Math.sin((Math.PI * i) / n);
-    buf.writeInt16LE(Math.round(Math.sin((2 * Math.PI * hz * i) / MAY_SAMPLE_RATE) * env * 2500), i * 2);
+    const t = i / MAY_SAMPLE_RATE;
+    const v = Math.sin(2 * Math.PI * hz * t) + 0.35 * Math.sin(2 * Math.PI * hz * 2 * t);
+    buf.writeInt16LE(Math.round((v / 1.35) * env * peak), i * 2);
   }
   return buf;
 }
