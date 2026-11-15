@@ -5,9 +5,11 @@ AI voice English tutor for Burmese adults. Tutor character name is **May**. Prod
 ## Status
 **Build phase.** System design is COMPLETE — all nine technical designs (`docs/technical-designs/01–09`) approved 2026-09-07…11, decisions logged through D-053. Code may now be scaffolded when the human asks for it.
 
-**Next milestone: the week-one spike** — Pipecat + Gemini Live, one session stage end-to-end, measuring the four make-or-break numbers: D-011 item log reliability · barge-in ≤300ms (R-SE-8, pipecat issue #3381 check per D-045) · end-to-end latency <1s (R-TE-1) · spoken Burmese quality. Design assumptions meet reality there; several D-xxx entries carry explicit "would revisit if" clauses keyed to spike results.
+**Code exists (2026-11-15).** TypeScript end to end per D-054: `apps/web` (Next.js + shadcn), `apps/voice` (Node gateway, `@google/genai` Live), `packages/brain` (LangGraph.js), `packages/shared` (zod). Patterns follow *Agentic Design Patterns* (D-055); the map is `docs/technical-designs/10-agentic-patterns-map.md` — read it before changing brain or gateway code. Run `pnpm test` and `pnpm typecheck` before every commit. `FAKE_GEMINI=1` runs the gateway without a key.
 
-Read `docs/technical-designs/00-system-overview.md` first — the whole system on one page with every diagram — then `01-architecture-and-stack.md` (the stack manifest: Next.js + FastAPI on Railway Singapore, Pipecat, LangGraph, Railway Postgres, R2) before writing any code.
+**Next milestone: the week-one spike** — Node gateway + Gemini Live, one session stage end-to-end, measuring the four make-or-break numbers: D-011 item log reliability · barge-in ≤300ms (R-SE-8, pipecat issue #3381 check per D-045) · end-to-end latency <1s (R-TE-1) · spoken Burmese quality. Design assumptions meet reality there; several D-xxx entries carry explicit "would revisit if" clauses keyed to spike results.
+
+Read `docs/technical-designs/00-system-overview.md` first — the whole system on one page with every diagram — then `10-agentic-patterns-map.md` (the code as built). `01-architecture-and-stack.md` is partly superseded by D-054: no FastAPI, no Pipecat, no Python.
 
 ## Where things live
 - `docs/requirements/` — source of truth. Read before answering product or scope questions.
@@ -40,7 +42,7 @@ Read `docs/technical-designs/00-system-overview.md` first — the whole system o
 - Every technical-design doc cites the PRD IDs it implements.
 
 ## Harness rules
-- `.claude/rules/backend.md`, `db.md`, `frontend.md` are placeholder stubs — this repo is docs-only. Ignore or delete until a real stack exists.
+- `.claude/rules/backend.md`, `db.md`, `frontend.md` are placeholder stubs written before the stack existed. Prefer the code and doc 10 over them.
 
 ## Diagrams
 - **Before drawing, follow the `diagram-selection` skill** (auto-triggers, or see `.claude/skills/diagram-selection/SKILL.md`) to pick the right diagram type — sequence vs flowchart vs C4 — based on what the design is showing. Prevents flowchart-for-a-round-trip mistakes.

@@ -1,5 +1,7 @@
 # Session engine — plan, conduct, guard, and bookkeep every lesson
 
+> **Partly superseded (2026-11-15, D-054, D-056, D-057):** the conductor is TypeScript (`apps/voice/src/conductor.ts`), the guard gates `offer_upgrade` and `request_repeat`, and stages follow the change note (5 stages, 10/20/40 minutes, 3 levels). The planner, processor and judge graphs keep this shape in LangGraph.js. See [10-agentic-patterns-map](10-agentic-patterns-map.md).
+
 **Status:** Approved (2026-09-09)
 **Author:** Larry (Thar Linn Htet)
 **Last updated:** 2026-09-09

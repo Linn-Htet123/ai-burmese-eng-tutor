@@ -1,5 +1,7 @@
 # Voice pipeline — real-time loop between learner and May
 
+> **Partly superseded (2026-11-15, D-054, D-056):** the backend is a Node gateway on `ws` + `@google/genai` Live, not FastAPI + Pipecat. The topology, latency budget, heartbeat and hosting below still hold. The item log is Gemini function calling with two gated tools. See [10-agentic-patterns-map](10-agentic-patterns-map.md).
+
 **Status:** Approved (2026-09-07)
 **Author:** Larry (Thar Linn Htet)
 **Last updated:** 2026-09-10 (updated to reflect D-042 session shape and D-045 Pipecat adoption)

@@ -1,0 +1,19 @@
+{
+  "name": "@may/brain",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.0.0",
+    "@langchain/google-genai": "^2.0.0",
+    "@langchain/langgraph": "^1.0.0",
+    "@may/shared": "workspace:*",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": { "typescript": "^5.9.3", "vitest": "^4.0.0", "@types/node": "^22" }
+}
